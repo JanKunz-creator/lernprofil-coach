@@ -1,34 +1,28 @@
-LERNPROFIL-COACH v0.4.1 – SINGLE CORE
+LERNPROFIL-COACH v0.4.2 – ERINNERUNGSTEST-FIX
 
-Ursache des Fehlers:
-Die Datei app.js ist im GitHub-Repository mit 0 Byte gespeichert.
-Eine leere JavaScript-Datei gilt im Browser trotzdem als „geladen“,
-führt aber keinen Programmcode aus.
+Behoben:
+- Ein begonnener Erinnerungstest konnte nach einem Seitenwechsel in einem
+  nicht vorhandenen Zwischenzustand hängen bleiben.
+- Einheit 2 blieb dadurch auf „in Bearbeitung“ und Einheit 3 gesperrt.
 
-Diese Version benötigt keine separate app.js mehr.
-Module, Versuchsdaten und App-Logik stecken vollständig in index.html.
+Die App repariert beim Start vorhandene Daten:
+- Ist der Erinnerungstest vollständig beantwortet, wird Einheit 2 automatisch
+  als abgeschlossen markiert.
+- Ist er nur teilweise beantwortet, wird er an der richtigen Stelle fortgesetzt.
+- Bereits gespeicherte Ergebnisse werden nicht gelöscht.
 
-WICHTIG BEIM UPLOAD:
-1. ZIP-Datei zuerst vollständig in einen normalen Windows-Ordner entpacken.
-2. Dateien NICHT direkt aus der ZIP-Ansicht in GitHub ziehen.
-3. Im Repository alle derzeitigen Dateien löschen.
-4. Danach ausschließlich die Inhalte dieses entpackten Pakets hochladen.
+UPLOAD:
+1. ZIP vollständig in einen normalen Windows-Ordner entpacken.
+2. Im Repository alle bisherigen Dateien löschen.
+3. Nur die Inhalte dieses Pakets hochladen.
+4. Es darf keine separate app.js vorhanden sein.
 5. Commit-Nachricht:
-   Version 0.4.1 – Single-Core-Version mit Test 3
+   Version 0.4.2 – Erinnerungstest und Freischaltung repariert
 6. Unter Actions auf den grünen Haken warten.
 7. Öffnen:
-   https://jankunz-creator.github.io/lernprofil-coach/?testmodus=1&v=041
+   https://jankunz-creator.github.io/lernprofil-coach/?testmodus=1&v=042
 
-Im Repository dürfen danach nur stehen:
-- index.html
-- styles.css
-- service-worker.js
-- manifest.webmanifest
-- audio-bienen.mp3
-- audio-tintenfisch.mp3
-- README.md
-- UPLOAD_ANLEITUNG.txt
-- .nojekyll
-- icons/
+Unten links muss Version 0.4.2 stehen.
 
-Es darf keine app.js mehr vorhanden sein.
+Nach dem ersten Start sollte Einheit 3 automatisch freigeschaltet sein,
+wenn der Erinnerungstest von Einheit 2 bereits vollständig beantwortet war.
