@@ -1,15 +1,17 @@
-const CACHE_NAME = "lernprofil-coach-v0.2.3";
+const CACHE_NAME = "lernprofil-coach-v0.3.0";
 
 const APP_FILES = [
   "./",
-  "./index.html?v=023",
-  "./styles.css?v=023",
-  "./modules.js?v=023",
-  "./experiment-data.js?v=023",
-  "./app.js?v=023",
+  "./index.html?v=030",
+  "./styles.css?v=030",
+  "./modules.js?v=030",
+  "./experiment-data.js?v=030",
+  "./app.js?v=030",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
-  "./icons/icon-512.png"
+  "./icons/icon-512.png",
+  "./audio/unit-2-bienen.mp3",
+  "./audio/unit-2-tintenfisch.mp3"
 ];
 
 self.addEventListener("install", event => {
@@ -35,33 +37,33 @@ self.addEventListener("activate", event => {
 self.addEventListener("fetch", event => {
   if (event.request.method !== "GET") return;
 
-  const requestUrl = new URL(event.request.url);
-
-  // Navigation immer zuerst aus dem Netz laden.
   if (event.request.mode === "navigate") {
     event.respondWith(
       fetch(event.request, { cache: "no-store" })
         .then(response => {
           const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put("./index.html?v=023", copy));
+          caches.open(CACHE_NAME).then(cache => cache.put("./index.html?v=030", copy));
           return response;
         })
         .catch(() =>
-          caches.match("./index.html?v=023").then(cached => cached || caches.match("./"))
+          caches.match("./index.html?v=030").then(cached => cached || caches.match("./"))
         )
     );
     return;
   }
 
   event.respondWith(
-    fetch(event.request, { cache: "no-store" })
-      .then(response => {
-        if (response && response.status === 200 && requestUrl.origin === self.location.origin) {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
-        }
-        return response;
-      })
-      .catch(() => caches.match(event.request))
+    caches.match(event.request).then(cached => {
+      if (cached) return cached;
+
+      return fetch(event.request, { cache: "no-store" })
+        .then(response => {
+          if (response && response.status === 200) {
+            const copy = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy));
+          }
+          return response;
+        });
+    })
   );
 });

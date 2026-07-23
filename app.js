@@ -22,6 +22,8 @@
   let state = loadState();
   let view = "home";
   let timerId = null;
+  let activeAudio = null;
+  let lastAudioSaveAt = 0;
 
   function clone(value) {
     return JSON.parse(JSON.stringify(value));
@@ -33,10 +35,16 @@
       topicVariant: "primary",
       context: { energy: null, mood: null, focus: null },
       pretests: {},
-      learning: { startedAt: null, completedAt: null },
+      learning: {
+        startedAt: null,
+        completedAt: null,
+        elapsedSeconds: 0,
+        audioPosition: 0
+      },
       immediate: emptyTestState(),
       delayed: emptyTestState(),
       delayedAvailableAt: null,
+      delayedIntervalMinutes: null,
       invalidReason: null
     };
   }
@@ -49,6 +57,7 @@
       transferAnswers: {},
       ratings: { effort: null, interest: null, confidence: null, repeat: null },
       score: null,
+      startedAt: null,
       completedAt: null
     };
   }
@@ -111,7 +120,32 @@
   }
 
   function getUnitState(unitId) {
-    if (!state.units[unitId]) state.units[unitId] = freshUnitState();
+    const fresh = freshUnitState();
+
+    if (!state.units[unitId]) {
+      state.units[unitId] = fresh;
+      return state.units[unitId];
+    }
+
+    const existing = state.units[unitId];
+    state.units[unitId] = {
+      ...fresh,
+      ...existing,
+      context: { ...fresh.context, ...(existing.context || {}) },
+      learning: { ...fresh.learning, ...(existing.learning || {}) },
+      immediate: {
+        ...fresh.immediate,
+        ...(existing.immediate || {}),
+        ratings: { ...fresh.immediate.ratings, ...(existing.immediate?.ratings || {}) }
+      },
+      delayed: {
+        ...fresh.delayed,
+        ...(existing.delayed || {}),
+        ratings: { ...fresh.delayed.ratings, ...(existing.delayed?.ratings || {}) }
+      },
+      pretests: { ...(existing.pretests || {}) }
+    };
+
     return state.units[unitId];
   }
 
@@ -164,7 +198,6 @@
     const participantReady = Boolean(name);
     const pinReady = /^\d{4}$/.test(state.participant.parentPin);
     const experimentReady = participantReady && pinReady;
-    const unit1 = getUnitState("unit-1");
     const rows = window.LEARNING_MODULES.map(module => renderModuleRow(module, experimentReady)).join("");
 
     app.innerHTML = `
@@ -211,7 +244,7 @@
         <article class="card metric">
           <span>Erinnerungstest</span>
           <strong>${isTestMode ? `${config.testModeDelayMinutes} Min.` : `${config.delayedHours} Std.`}</strong>
-          <span>Erst danach wird die Einheit abgeschlossen.</span>
+          <span>Erst danach wird die nächste Einheit freigeschaltet.</span>
         </article>
       </section>
 
@@ -227,11 +260,10 @@
       </section>
 
       <section class="section card compact-card">
-        <h2>Warum die Einheiten getrennt bleiben</h2>
+        <h2>Kurzer Tagesrhythmus</h2>
         <p>
-          Jede Einheit nutzt ein eigenes Thema und einen eigenen Datensatz. Die nächste neue
-          Lernphase wird erst nach dem Erinnerungstest der vorherigen Einheit freigegeben.
-          So kann Wissen aus einer Einheit das nächste Thema möglichst wenig beeinflussen.
+          Eine neue Lernphase dauert knapp drei Minuten. Danach folgen ein kurzer Soforttest
+          und am nächsten Morgen der Erinnerungstest. Die App speichert den tatsächlichen Zeitabstand.
         </p>
       </section>
     `;
@@ -239,7 +271,7 @@
     document.querySelector("#profileButton").addEventListener("click", () => go("profile"));
     document.querySelector("#parentButton").addEventListener("click", () => go("parent"));
     document.querySelector("#exportButton").addEventListener("click", exportData);
-    bindModuleButtons(experimentReady, unit1);
+    bindModuleButtons(experimentReady);
   }
 
   function renderModuleRow(module, experimentReady) {
@@ -253,7 +285,7 @@
       `;
     }
 
-    if (module.id !== "unit-1") {
+    if (module.availability !== "ready" || !units[module.id]) {
       return `
         <div class="module muted-module">
           <span class="module-number">${module.number}</span>
@@ -263,16 +295,22 @@
       `;
     }
 
-    const unitState = getUnitState("unit-1");
+    const unitId = module.id;
+    const unitNumber = Number(module.number);
+    const unitState = getUnitState(unitId);
     const progress = unitProgress(unitState);
+    const previousState = unitNumber > 1 ? getUnitState(`unit-${unitNumber - 1}`) : null;
+    const prerequisiteDone = unitNumber === 1 || ["complete", "excluded"].includes(previousState?.status);
+
     let actionLabel = "starten";
     let action = "start-unit";
-    let disabled = !experimentReady;
-    let statusText = "bereit";
+    let disabled = !experimentReady || !prerequisiteDone;
+    let statusText = prerequisiteDone ? "bereit" : `nach Einheit ${unitNumber - 1}`;
 
     if (unitState.status === "in_progress") {
       actionLabel = "fortsetzen";
       statusText = "läuft";
+      disabled = !experimentReady;
     }
 
     if (unitState.status === "waiting_delayed") {
@@ -299,13 +337,18 @@
 
     return `
       <div class="module unit-module">
-        <span class="module-number">1</span>
+        <span class="module-number">${unitNumber}</span>
         <span>
-          <strong>Versuchseinheit 1</strong>
+          <strong>Versuchseinheit ${unitNumber}</strong>
           <small>${esc(statusText)}</small>
           <span class="inline-progress"><span style="width:${progress}%"></span></span>
         </span>
-        <button class="mini-button" data-action="${action}" ${disabled ? "disabled" : ""}>${esc(actionLabel)}</button>
+        <button
+          class="mini-button"
+          data-action="${action}"
+          data-unit-id="${unitId}"
+          ${disabled ? "disabled" : ""}
+        >${esc(actionLabel)}</button>
       </div>
     `;
   }
@@ -314,13 +357,17 @@
     document.querySelectorAll("[data-action]").forEach(button => {
       button.addEventListener("click", () => {
         const action = button.dataset.action;
+        const unitId = button.dataset.unitId;
+
         if (action === "demo") return startDemo();
+
         if (!experimentReady) {
           if (!state.participant.name.trim()) return go("profile");
           return go("parent");
         }
-        if (action === "start-unit") return startOrResumeUnit("unit-1");
-        if (action === "start-delayed") return startDelayed("unit-1");
+
+        if (action === "start-unit" && unitId) return startOrResumeUnit(unitId);
+        if (action === "start-delayed" && unitId) return startDelayed(unitId);
       });
     });
   }
@@ -386,6 +433,16 @@
   function startDelayed(unitId) {
     const unitState = getUnitState(unitId);
     if (!unitState.delayedAvailableAt || Date.now() < new Date(unitState.delayedAvailableAt).getTime()) return;
+
+    const startedAt = new Date().toISOString();
+    unitState.delayed.startedAt = unitState.delayed.startedAt || startedAt;
+
+    if (unitState.immediate.completedAt) {
+      unitState.delayedIntervalMinutes = Math.round(
+        (new Date(unitState.delayed.startedAt).getTime() - new Date(unitState.immediate.completedAt).getTime()) / 60000
+      );
+    }
+
     unitState.status = "in_progress";
     state.active = { unitId, stage: "recall-prompt", index: 0, testPhase: "delayed", returnStage: null };
     saveState();
@@ -418,7 +475,9 @@
   }
 
   function renderContext(unitState) {
-    app.innerHTML = pageShell("Versuchseinheit 1", `
+    const unitNumber = Number(state.active.unitId.split("-")[1]);
+
+    app.innerHTML = pageShell(`Versuchseinheit ${unitNumber}`, `
       <p class="lead">Bevor es losgeht, drei kurze Angaben zum heutigen Zustand.</p>
       ${ratingBlock("energy", "Wie fit fühlst du dich gerade?", unitState.context.energy)}
       ${ratingBlock("mood", "Wie ist deine Stimmung?", unitState.context.mood)}
@@ -512,23 +571,35 @@
   }
 
   function renderLearningIntro(topic) {
+    const learning = topic.learning;
+    const duration = learning.durationSeconds || config.learningSeconds;
+    const auditory = learning.mode === "audio";
+
     app.innerHTML = pageShell("Lernphase", `
       <div class="learning-intro-card">
-        <span class="large-icon">◎</span>
+        <span class="large-icon">${auditory ? "◖))" : "◎"}</span>
         <h2>${esc(topic.publicTitle)}</h2>
-        <p>Du hast genau sechs Minuten Zeit. Sieh dir alle Informationen aufmerksam an.</p>
+        <p>
+          ${auditory
+            ? `Du hörst eine Aufnahme von etwa ${Math.ceil(duration / 60)} Minuten. Der Inhalt wird nicht als Text angezeigt.`
+            : `Du hast ${formatDuration(duration)} Minuten Zeit. Sieh dir alle Informationen aufmerksam an.`}
+        </p>
       </div>
       <ul class="clean-list">
         <li>Während der Lernphase nichts aufschreiben.</li>
         <li>Keine zusätzlichen Erklärungen oder Hinweise.</li>
-        <li>Nach Ablauf der Zeit werden die Inhalte automatisch ausgeblendet.</li>
+        <li>${auditory ? "Die Aufnahme kann pausiert, aber nicht zurückgespult werden." : "Nach Ablauf der Zeit werden die Inhalte automatisch ausgeblendet."}</li>
       </ul>
-      <div class="actions"><button class="btn btn-dark" id="startLearningButton">Sechs Minuten starten</button></div>
+      <div class="actions">
+        <button class="btn btn-dark" id="startLearningButton">${auditory ? "Hörphase öffnen" : "Lernphase starten"}</button>
+      </div>
     `, "Bereit?");
 
     document.querySelector("#startLearningButton").addEventListener("click", () => {
       const unitState = getUnitState(state.active.unitId);
-      unitState.learning.startedAt = new Date().toISOString();
+      if (!auditory && !unitState.learning.startedAt) {
+        unitState.learning.startedAt = new Date().toISOString();
+      }
       state.active.stage = "learning";
       saveState();
       render();
@@ -536,16 +607,25 @@
   }
 
   function renderLearning(unitState, topic) {
-    const started = new Date(unitState.learning.startedAt).getTime();
-    const elapsed = Math.max(0, Math.floor((Date.now() - started) / 1000));
-    const remaining = Math.max(0, config.learningSeconds - elapsed);
+    if (topic.learning.mode === "audio") {
+      renderAuditoryLearning(unitState, topic);
+      return;
+    }
+
+    renderVisualLearning(unitState, topic);
+  }
+
+  function renderVisualLearning(unitState, topic) {
+    const learning = topic.learning;
+    const duration = learning.durationSeconds || config.learningSeconds;
+    const elapsed = Math.max(0, Number(unitState.learning.elapsedSeconds || 0));
+    const remaining = Math.max(0, duration - elapsed);
 
     if (remaining <= 0) {
       completeLearning(unitState);
       return;
     }
 
-    const learning = topic.learning;
     app.innerHTML = `
       <section class="learning-header">
         <div><p class="eyebrow dark">${esc(learning.kicker)}</p><h1>${esc(topic.publicTitle)}</h1></div>
@@ -577,18 +657,184 @@
       <p class="help center">Die Lernphase endet automatisch. Bitte die Seite geöffnet lassen.</p>
     `;
 
+    if (!unitState.learning.startedAt) {
+      unitState.learning.startedAt = new Date().toISOString();
+      saveState();
+    }
+
     stopTimer();
+    let lastTick = Date.now();
+
     timerId = window.setInterval(() => {
-      const nowElapsed = Math.max(0, Math.floor((Date.now() - started) / 1000));
-      const nowRemaining = Math.max(0, config.learningSeconds - nowElapsed);
+      const now = Date.now();
+      if (!document.hidden) {
+        const delta = Math.max(0, (now - lastTick) / 1000);
+        unitState.learning.elapsedSeconds = Math.min(
+          duration,
+          Number(unitState.learning.elapsedSeconds || 0) + delta
+        );
+      }
+      lastTick = now;
+
+      const nowRemaining = Math.max(0, Math.ceil(duration - Number(unitState.learning.elapsedSeconds || 0)));
       const timer = document.querySelector("#learningTimer");
       if (timer) timer.textContent = formatDuration(nowRemaining);
+
+      if (Math.floor(unitState.learning.elapsedSeconds) % 5 === 0) saveState();
       if (nowRemaining <= 0) completeLearning(unitState);
-    }, 500);
+    }, 1000);
+  }
+
+  function renderAuditoryLearning(unitState, topic) {
+    const learning = topic.learning;
+    const duration = learning.durationSeconds || config.learningSeconds;
+    const savedPosition = Math.max(0, Math.min(duration, Number(unitState.learning.audioPosition || 0)));
+    const remaining = Math.max(0, Math.ceil(duration - savedPosition));
+    const initialProgress = Math.min(100, (savedPosition / duration) * 100);
+    const initialSegment = Math.min(
+      learning.segmentCount || 1,
+      Math.floor((savedPosition / duration) * (learning.segmentCount || 1)) + 1
+    );
+
+    if (remaining <= 0) {
+      completeLearning(unitState);
+      return;
+    }
+
+    app.innerHTML = `
+      <section class="learning-header">
+        <div><p class="eyebrow dark">${esc(learning.kicker)}</p><h1>${esc(topic.publicTitle)}</h1></div>
+        <div class="small-timer" id="learningTimer">${formatDuration(remaining)}</div>
+      </section>
+
+      <section class="audio-stage">
+        <div class="sound-wave" aria-hidden="true">
+          ${Array.from({ length: 11 }, (_, index) => `<span style="--wave-index:${index}"></span>`).join("")}
+        </div>
+
+        <p class="audio-instruction">
+          Nur zuhören. Es werden während der Aufnahme keine inhaltlichen Stichwörter angezeigt.
+        </p>
+
+        <div class="audio-progress" aria-label="Fortschritt der Aufnahme">
+          <span id="audioProgressBar" style="width:${initialProgress}%"></span>
+        </div>
+
+        <p class="audio-status" id="audioStatus">
+          Abschnitt ${initialSegment} von ${learning.segmentCount || 1}
+        </p>
+
+        <audio id="learningAudio" preload="auto" src="${esc(learning.audioSrc)}"></audio>
+
+        <div class="actions centered-actions">
+          <button class="btn btn-dark audio-control" id="audioControlButton">
+            ${savedPosition > 0 ? "Aufnahme fortsetzen" : "Aufnahme starten"}
+          </button>
+        </div>
+
+        <p class="help center">
+          Pausieren ist möglich. Zurückspulen und erneutes Abspielen sind nicht vorgesehen.
+        </p>
+        <p class="error-message center" id="audioError" hidden>
+          Die Aufnahme konnte nicht geladen werden. Bitte die Internetverbindung prüfen und die Seite neu öffnen.
+        </p>
+      </section>
+    `;
+
+    stopTimer();
+    const audio = document.querySelector("#learningAudio");
+    const control = document.querySelector("#audioControlButton");
+    const timer = document.querySelector("#learningTimer");
+    const progressBar = document.querySelector("#audioProgressBar");
+    const status = document.querySelector("#audioStatus");
+    const error = document.querySelector("#audioError");
+    activeAudio = audio;
+    lastAudioSaveAt = Date.now();
+
+    const setSavedPosition = () => {
+      const current = Math.min(duration, Number(audio.currentTime || 0));
+      unitState.learning.audioPosition = current;
+
+      const currentRemaining = Math.max(0, Math.ceil(duration - current));
+      const progress = Math.min(100, (current / duration) * 100);
+      const segment = Math.min(
+        learning.segmentCount || 1,
+        Math.floor((current / duration) * (learning.segmentCount || 1)) + 1
+      );
+
+      if (timer) timer.textContent = formatDuration(currentRemaining);
+      if (progressBar) progressBar.style.width = `${progress}%`;
+      if (status) status.textContent = `Abschnitt ${segment} von ${learning.segmentCount || 1}`;
+
+      if (Date.now() - lastAudioSaveAt >= 4000) {
+        saveState();
+        lastAudioSaveAt = Date.now();
+      }
+
+      if (current >= duration - 0.25) {
+        completeLearning(unitState);
+      }
+    };
+
+    audio.addEventListener("loadedmetadata", () => {
+      try {
+        audio.currentTime = Math.min(savedPosition, Math.max(0, audio.duration - 0.2));
+      } catch (loadError) {
+        console.warn("Audio-Position konnte nicht gesetzt werden.", loadError);
+      }
+    }, { once: true });
+
+    audio.addEventListener("timeupdate", setSavedPosition);
+    audio.addEventListener("ended", () => {
+      unitState.learning.audioPosition = duration;
+      completeLearning(unitState);
+    });
+    audio.addEventListener("error", () => {
+      error.hidden = false;
+      control.disabled = true;
+    });
+
+    audio.addEventListener("play", () => {
+      if (!unitState.learning.startedAt) unitState.learning.startedAt = new Date().toISOString();
+      control.textContent = "Pause";
+      document.querySelector(".sound-wave")?.classList.add("playing");
+      saveState();
+    });
+
+    audio.addEventListener("pause", () => {
+      if (audio.ended) return;
+      unitState.learning.audioPosition = Number(audio.currentTime || 0);
+      control.textContent = "Aufnahme fortsetzen";
+      document.querySelector(".sound-wave")?.classList.remove("playing");
+      saveState();
+    });
+
+    control.addEventListener("click", async () => {
+      if (audio.paused) {
+        try {
+          await audio.play();
+        } catch (playError) {
+          error.textContent = "Die Aufnahme konnte nicht gestartet werden. Bitte noch einmal tippen.";
+          error.hidden = false;
+        }
+      } else {
+        audio.pause();
+      }
+    });
   }
 
   function completeLearning(unitState) {
     stopTimer();
+
+    if (activeAudio) {
+      try {
+        activeAudio.pause();
+      } catch (error) {
+        console.warn("Audio konnte beim Abschluss nicht pausiert werden.", error);
+      }
+      activeAudio = null;
+    }
+
     unitState.learning.completedAt = new Date().toISOString();
     state.active.stage = "recall-prompt";
     state.active.testPhase = "immediate";
@@ -895,16 +1141,23 @@
 
   function renderCompletionMessage(unitState) {
     const delayed = state.active.testPhase === "delayed";
+    const unitNumber = Number(state.active.unitId.split("-")[1]);
+
     app.innerHTML = pageShell(delayed ? "Einheit vollständig abgeschlossen" : "Soforttest gespeichert", `
       <div class="completion-card">
         <span class="large-icon">✓</span>
         <h2>${delayed ? "Vielen Dank." : "Der erste Teil ist geschafft."}</h2>
         <p>${delayed
-          ? "Sofort- und Erinnerungstest wurden gespeichert. Das Ergebnis bleibt bis zum Ende des gesamten Versuchs verborgen."
-          : `Der Erinnerungstest wird ${isTestMode ? `in ${config.testModeDelayMinutes} Minuten` : `am ${formatDateTime(unitState.delayedAvailableAt)}`} freigeschaltet.`}</p>
+          ? `Sofort- und Erinnerungstest von Einheit ${unitNumber} wurden gespeichert. ${unitNumber < 8 ? `Einheit ${unitNumber + 1} ist jetzt freigeschaltet, sofern sie bereits in der App enthalten ist.` : "Der gesamte Versuch ist abgeschlossen."}`
+          : `Der Erinnerungstest wird ${isTestMode ? `in ${config.testModeDelayMinutes} Minuten` : `frühestens am ${formatDateTime(unitState.delayedAvailableAt)}`} freigeschaltet.`}</p>
       </div>
+      ${!delayed && !isTestMode ? `
+        <p class="notice">
+          Empfohlen ist der Abruf am nächsten Vormittag, möglichst innerhalb von 12 bis 24 Stunden.
+        </p>
+      ` : ""}
       <div class="actions"><button class="btn btn-dark" id="homeButton">Zur Startseite</button></div>
-    `, delayed ? "Einheit 1 von 8" : "Keine Wiederholung bis dahin");
+    `, delayed ? `Einheit ${unitNumber} von 8` : "Bis dahin bitte nicht wiederholen");
 
     document.querySelector("#homeButton").addEventListener("click", () => {
       state.active = null;
@@ -1027,21 +1280,37 @@
   }
 
   function renderParentDashboard() {
-    const unitState = getUnitState("unit-1");
-    app.innerHTML = pageShell("Elternbereich", `
-      <div class="grid grid-2">
+    const readyModules = window.LEARNING_MODULES.filter(module => module.availability === "ready" && units[module.id]);
+
+    const unitCards = readyModules.map(module => {
+      const unitState = getUnitState(module.id);
+      const interval = unitState.delayedIntervalMinutes != null
+        ? formatIntervalMinutes(unitState.delayedIntervalMinutes)
+        : "noch nicht erfasst";
+
+      return `
         <article class="card inner-card">
-          <h2>Versuchseinheit 1</h2>
+          <h2>Versuchseinheit ${module.number}</h2>
           <p><strong>Status:</strong> ${esc(statusLabel(unitState.status))}</p>
           <p><strong>Themenvariante:</strong> ${unitState.topicVariant === "reserve" ? "Reservethema" : "Hauptthema"}</p>
-          <p><strong>Erinnerungstest:</strong> ${unitState.delayedAvailableAt ? esc(formatDateTime(unitState.delayedAvailableAt)) : "noch nicht terminiert"}</p>
-          <p class="help">Punktwerte werden bewusst nicht angezeigt, solange der Gesamtversuch nicht abgeschlossen ist.</p>
+          <p><strong>Erinnerungstest ab:</strong> ${unitState.delayedAvailableAt ? esc(formatDateTime(unitState.delayedAvailableAt)) : "noch nicht terminiert"}</p>
+          <p><strong>Tatsächlicher Abstand:</strong> ${esc(interval)}</p>
+          <button class="btn btn-danger" data-reset-unit="${module.id}">Einheit ${module.number} zurücksetzen</button>
         </article>
+      `;
+    }).join("");
+
+    app.innerHTML = pageShell("Elternbereich", `
+      <p class="notice">
+        Punktwerte und Zwischenranglisten bleiben verborgen, bis alle vorgesehenen Einheiten abgeschlossen sind.
+      </p>
+      <div class="grid grid-2">
+        ${unitCards}
         <article class="card inner-card">
-          <h2>Daten</h2>
+          <h2>Datensicherung</h2>
+          <p>Der Export enthält Zeitpunkte, Tagesform und Testergebnisse aller begonnenen Einheiten.</p>
           <div class="actions vertical-actions">
             <button class="btn btn-dark" id="exportButton">JSON-Sicherung exportieren</button>
-            <button class="btn btn-danger" id="resetUnitButton">Einheit 1 zurücksetzen</button>
           </div>
         </article>
       </div>
@@ -1050,12 +1319,18 @@
 
     document.querySelector("#exportButton").addEventListener("click", exportData);
     document.querySelector("#homeButton").addEventListener("click", () => go("home"));
-    document.querySelector("#resetUnitButton").addEventListener("click", () => {
-      if (!window.confirm("Versuchseinheit 1 vollständig löschen und neu beginnen? Dies sollte nur bei einem technischen Fehler geschehen.")) return;
-      delete state.units["unit-1"];
-      if (state.active?.unitId === "unit-1") state.active = null;
-      saveState();
-      renderParentDashboard();
+
+    document.querySelectorAll("[data-reset-unit]").forEach(button => {
+      button.addEventListener("click", () => {
+        const unitId = button.dataset.resetUnit;
+        const unitNumber = Number(unitId.split("-")[1]);
+        if (!window.confirm(`Versuchseinheit ${unitNumber} vollständig löschen und neu beginnen? Dies sollte nur bei einem technischen Fehler geschehen.`)) return;
+
+        delete state.units[unitId];
+        if (state.active?.unitId === unitId) state.active = null;
+        saveState();
+        renderParentDashboard();
+      });
     });
   }
 
@@ -1161,6 +1436,16 @@
     return new Intl.DateTimeFormat("de-DE", { dateStyle: "medium", timeStyle: "short" }).format(new Date(value));
   }
 
+  function formatIntervalMinutes(totalMinutes) {
+    const safe = Math.max(0, Number(totalMinutes || 0));
+    const hours = Math.floor(safe / 60);
+    const minutes = safe % 60;
+
+    if (hours === 0) return `${minutes} Minuten`;
+    if (minutes === 0) return `${hours} Stunden`;
+    return `${hours} Std. ${minutes} Min.`;
+  }
+
   function exportData() {
     const payload = {
       app: "Lernprofil-Coach",
@@ -1185,6 +1470,20 @@
       window.clearInterval(timerId);
       timerId = null;
     }
+
+    if (activeAudio) {
+      try {
+        const unitState = state.active?.unitId ? getUnitState(state.active.unitId) : null;
+        if (unitState && Number.isFinite(activeAudio.currentTime)) {
+          unitState.learning.audioPosition = Number(activeAudio.currentTime || 0);
+          saveState();
+        }
+        activeAudio.pause();
+      } catch (error) {
+        console.warn("Audio konnte nicht sauber angehalten werden.", error);
+      }
+      activeAudio = null;
+    }
   }
 
   function updateNetwork() {
@@ -1196,7 +1495,7 @@
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker
-        .register("./service-worker.js?v=023", { updateViaCache: "none" })
+        .register("./service-worker.js?v=030", { updateViaCache: "none" })
         .then(registration => registration.update())
         .catch(error => console.warn("Service Worker konnte nicht registriert werden.", error));
     });
