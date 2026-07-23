@@ -1,24 +1,31 @@
-LERNPROFIL-COACH v0.3.3 – STABILE NEUFASSUNG
+LERNPROFIL-COACH v0.3.4 – AUDIO-FIX
 
-Neue eindeutige Kerndateien:
-- styles-033.css
-- modules-033.js
-- experiment-data-033.js
-- app-033.js
-- service-worker-033.js
+Ursache:
+Die MP3-Dateien waren technisch in Ordnung, wurden aber auf der veröffentlichten
+Seite nicht am erwarteten Unterordner-Pfad geladen.
+
+Änderung:
+- Beide MP3-Dateien liegen jetzt direkt im Hauptverzeichnis.
+- Eindeutige Dateinamen verhindern alte Cache-Treffer:
+  audio-bienen-034.mp3
+  audio-tintenfisch-034.mp3
+- Der Player kann nach einem Ladefehler erneut laden.
+- Eine genaue Fehlermeldung zeigt künftig den erwarteten Dateinamen.
 
 UPLOAD:
 1. ZIP entpacken.
-2. In GitHub auf Datei hinzufügen -> Dateien hochladen.
-3. ALLE Dateien und Ordner aus dem Paket hochladen.
-4. Die vorhandene index.html ersetzen lassen.
+2. ALLE Dateien und Ordner aus dem Paket ins Hauptverzeichnis des Repositorys hochladen.
+3. Vorhandene index.html ersetzen lassen.
+4. Wichtig: Die beiden MP3-Dateien müssen direkt neben index.html liegen.
 5. Commit-Nachricht:
-   Version 0.3.3 – stabile Neufassung
+   Version 0.3.4 – Audioaufnahme repariert
 6. Unter Actions auf den grünen Haken warten.
 7. Öffnen:
-   https://jankunz-creator.github.io/lernprofil-coach/?testmodus=1&v=033
+   https://jankunz-creator.github.io/lernprofil-coach/?testmodus=1&v=034
 
-Unten links muss Version 0.3.3 stehen.
+Unten links muss Version 0.3.4 stehen.
 
-Falls eine Datei fehlt, erscheint jetzt eine genaue Fehlermeldung
-statt einer leeren Seite.
+Direkter Kontrolltest im Browser:
+https://jankunz-creator.github.io/lernprofil-coach/audio-bienen-034.mp3
+
+Unter dieser Adresse muss die Aufnahme direkt abspielbar sein.

@@ -1,12 +1,7 @@
-# Lernprofil-Coach 0.3.3
+# Lernprofil-Coach 0.3.4
 
-Stabile Neufassung mit eindeutigen Asset-Dateinamen und sichtbarer Startdiagnose.
+Audio-Fix für Versuchseinheit 2.
 
-Enthalten:
-- Versuchseinheit 1 und 2
-- Startcheck
-- Vorwissenstest
-- Soforttest
-- Erinnerungstest nach 12 Stunden
-- Elternbereich mit PIN
-- Offline-PWA
+Die Audiodateien liegen direkt im Hauptverzeichnis:
+- audio-bienen-034.mp3
+- audio-tintenfisch-034.mp3
