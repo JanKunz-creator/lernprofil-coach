@@ -1,0 +1,34 @@
+LERNPROFIL-COACH v0.4.1 – SINGLE CORE
+
+Ursache des Fehlers:
+Die Datei app.js ist im GitHub-Repository mit 0 Byte gespeichert.
+Eine leere JavaScript-Datei gilt im Browser trotzdem als „geladen“,
+führt aber keinen Programmcode aus.
+
+Diese Version benötigt keine separate app.js mehr.
+Module, Versuchsdaten und App-Logik stecken vollständig in index.html.
+
+WICHTIG BEIM UPLOAD:
+1. ZIP-Datei zuerst vollständig in einen normalen Windows-Ordner entpacken.
+2. Dateien NICHT direkt aus der ZIP-Ansicht in GitHub ziehen.
+3. Im Repository alle derzeitigen Dateien löschen.
+4. Danach ausschließlich die Inhalte dieses entpackten Pakets hochladen.
+5. Commit-Nachricht:
+   Version 0.4.1 – Single-Core-Version mit Test 3
+6. Unter Actions auf den grünen Haken warten.
+7. Öffnen:
+   https://jankunz-creator.github.io/lernprofil-coach/?testmodus=1&v=041
+
+Im Repository dürfen danach nur stehen:
+- index.html
+- styles.css
+- service-worker.js
+- manifest.webmanifest
+- audio-bienen.mp3
+- audio-tintenfisch.mp3
+- README.md
+- UPLOAD_ANLEITUNG.txt
+- .nojekyll
+- icons/
+
+Es darf keine app.js mehr vorhanden sein.

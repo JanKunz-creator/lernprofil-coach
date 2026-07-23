@@ -1,16 +1,13 @@
 # Lernprofil-Coach
 
-## Version 0.4.0
+## Version 0.4.1
 
-Enthalten sind jetzt drei unabhängige Versuchseinheiten:
+Diese Version enthält die vollständige Programmlogik direkt in `index.html`.
+Separate Dateien wie `app.js`, `modules.js` oder `experiment-data.js`
+werden nicht mehr benötigt.
+
+Enthalten sind Versuchseinheit 1 bis 3:
 
 1. bildlich-strukturiert
 2. auditiv-sprachlich
 3. lesend-schriftlich
-
-Versuchseinheit 3 verwendet als Hauptthema den Magnetkompass und als
-unabhängiges Reservethema den Reißverschluss.
-
-Die Lesephase dauert 2 Minuten 45 Sekunden. Währenddessen werden drei bis
-fünf eigene Stichpunkte im eingeblendeten Notizfeld festgehalten. Text und
-Notizen werden danach ausgeblendet.
