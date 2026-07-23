@@ -1,0 +1,27 @@
+LERNPROFIL-COACH v0.4.0 – VERSUCHSEINHEIT 3
+
+Neu:
+- Versuchseinheit 3 ist vollständig eingebaut.
+- Lernbedingung: lesend-schriftlich.
+- Hauptthema: Wie ein Kompass die Nordrichtung findet.
+- Unabhängiges Reservethema: Wie ein Reißverschluss schließt.
+- 2:45 Minuten Lese- und Notizzeit.
+- Drei bis fünf eigene Stichpunkte im App-Feld.
+- Text und Notizen werden vor dem Soforttest ausgeblendet.
+- Erinnerungstest nach 12 Stunden, im Testmodus nach 2 Minuten.
+- Einheit 3 wird erst nach vollständig abgeschlossener Einheit 2 freigeschaltet.
+
+UPLOAD:
+1. ZIP entpacken.
+2. Alle Dateien und den Ordner icons in das Hauptverzeichnis des Repositorys hochladen.
+3. Vorhandene Dateien ersetzen.
+4. Commit-Nachricht:
+   Version 0.4.0 – Versuchseinheit 3
+5. Unter Actions auf den grünen Haken warten.
+6. Öffnen:
+   https://jankunz-creator.github.io/lernprofil-coach/?testmodus=1&v=040
+
+Unten links muss Version 0.4.0 stehen.
+
+Zum technischen Test kann Einheit 2 im Elternbereich auf abgeschlossenem Stand
+bleiben. Ist sie noch nicht abgeschlossen, bleibt Einheit 3 korrekt gesperrt.

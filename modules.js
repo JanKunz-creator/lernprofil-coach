@@ -20,10 +20,17 @@ window.LEARNING_MODULES = [
     subtitle: "Eigenständiges Thema mit Sofort- und Erinnerungstest",
     availability: "ready"
   },
-  ...Array.from({ length: 6 }, (_, index) => ({
-    id: `unit-${index + 3}`,
-    number: index + 3,
-    title: `Versuchseinheit ${index + 3}`,
+  {
+    id: "unit-3",
+    number: 3,
+    title: "Versuchseinheit 3",
+    subtitle: "Eigenständiges Thema mit Sofort- und Erinnerungstest",
+    availability: "ready"
+  },
+  ...Array.from({ length: 5 }, (_, index) => ({
+    id: `unit-${index + 4}`,
+    number: index + 4,
+    title: `Versuchseinheit ${index + 4}`,
     subtitle: "Eigenständiges Thema, wird im nächsten Ausbau ergänzt",
     availability: "planned"
   }))

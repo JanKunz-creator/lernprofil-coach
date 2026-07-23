@@ -1,5 +1,5 @@
 window.EXPERIMENT_CONFIG = {
-  version: "0.3.6",
+  version: "0.4.0",
   learningSeconds: 165,
   delayedHours: 12,
   testModeDelayMinutes: 2,
@@ -479,7 +479,7 @@ window.EXPERIMENT_UNITS = {
     "learning": {
       "mode": "audio",
       "kicker": "Eine Hörgeschichte in mehreren Abschnitten",
-      "audioSrc": "./audio-bienen.mp3?v=036",
+      "audioSrc": "./audio-bienen.mp3?v=040",
       "durationSeconds": 165,
       "segmentCount": 6,
       "script": "Stell dir vor, eine Honigbiene hat außerhalb des Stocks eine ergiebige Stelle mit vielen Blüten gefunden. Sie fliegt zurück und teilt anderen Sammlerinnen nicht nur mit, dass es dort Nahrung gibt, sondern auch, in welcher Richtung und ungefähr in welcher Entfernung sie liegt.\n\nIm dunklen Bienenstock tanzt die Biene auf einer senkrechten Wabe. Der Tanz besteht aus einem geraden Abschnitt, dem sogenannten Schwänzellauf, und aus zwei Bögen. Nach dem geraden Lauf dreht die Biene nach links zurück, wiederholt den Schwänzellauf und dreht danach nach rechts zurück. So entsteht ungefähr die Form einer Acht.\n\nDie Richtung steckt im Winkel des geraden Schwänzellaufs. Weil im Stock die Sonne nicht zu sehen ist, benutzen die Bienen die Schwerkraft als Ersatz für die Himmelsrichtung. Ein Lauf gerade nach oben bedeutet: Fliege vom Stock aus in Richtung der Sonne. Ein Lauf gerade nach unten bedeutet: Fliege von der Sonne weg. Zeigt der Lauf schräg nach links, liegt auch das Ziel entsprechend links von der Sonnenrichtung.\n\nDie Entfernung steckt vor allem in der Dauer des Schwänzellaufs. Je länger die Biene dabei schwänzelt, desto weiter ist die Futterstelle entfernt. Ein kurzer Schwänzellauf steht also für ein näheres Ziel, ein längerer für ein weiter entferntes.\n\nDer Ablauf ist damit klar: Zuerst entdeckt die Biene eine lohnende Futterstelle. Dann fliegt sie in den Stock zurück. Dort führt sie den Tanz mehrfach aus. Andere Bienen folgen ihr dicht und nehmen Winkel und Dauer wahr. Anschließend fliegen sie in die angegebene Richtung und suchen in der passenden Entfernung. Auch der Duft, den die Tänzerin von den Blüten mitbringt, kann den Suchenden helfen, die richtige Futterquelle zu erkennen.\n\nMerke dir das Grundprinzip: Der Winkel des Schwänzellaufs zeigt die Richtung im Verhältnis zur Sonne. Die Dauer des Schwänzellaufs zeigt die Entfernung. Wird der Lauf länger, liegt das Ziel weiter weg. Ändert sich sein Winkel, müssen die Bienen in eine andere Richtung fliegen."
@@ -776,7 +776,7 @@ window.EXPERIMENT_UNITS = {
     "learning": {
       "mode": "audio",
       "kicker": "Eine Hörgeschichte in mehreren Abschnitten",
-      "audioSrc": "./audio-tintenfisch.mp3?v=036",
+      "audioSrc": "./audio-tintenfisch.mp3?v=040",
       "durationSeconds": 165,
       "segmentCount": 7,
       "script": "Stell dir vor, ein Tintenfisch schwimmt über hellen Sand und kurz darauf über dunkle Steine. Seine Haut kann ihr Muster sehr schnell verändern. Dafür besitzt sie viele kleine Farborgane, die Chromatophoren genannt werden.\n\nJede Chromatophore enthält in der Mitte einen elastischen Sack mit Farbstoff. Um diesen Sack herum liegen feine Muskeln, die strahlenförmig nach außen ziehen. Die Muskeln werden direkt durch Nerven gesteuert. Dadurch kann das Tier einzelne Farborgane sehr schnell öffnen oder schließen.\n\nWenn die Nerven den Muskeln ein Signal geben, ziehen sich die strahlenförmigen Muskeln zusammen. Dabei ziehen sie den Farbstoffsack nach außen. Er wird flach und breit, sodass seine Farbe auf einer größeren Hautfläche sichtbar wird. Von außen wirkt die betreffende Stelle nun dunkler oder farbiger.\n\nWenn das Nervensignal endet und die Muskeln entspannen, zieht sich der elastische Farbstoffsack wieder zusammen. Er wird klein, und viel weniger Farbe ist sichtbar. Eine einzelne Chromatophore funktioniert deshalb ein wenig wie ein winziger, dehnbarer Farbpunkt.\n\nDer Tintenfisch steuert nicht nur ein solches Farborgang, sondern sehr viele gleichzeitig. Indem manche Chromatophoren geöffnet und andere geschlossen werden, entstehen Flecken, Streifen oder größere Flächen. Zusätzlich besitzt die Haut reflektierende Zellen, die Licht zurückwerfen und weitere Farbeffekte erzeugen können.\n\nDer Ablauf beginnt mit einem optischen Eindruck. Die Augen nehmen die Umgebung oder ein anderes Tier wahr. Das Nervensystem verarbeitet die Information und sendet Signale an bestimmte Hautbereiche. Dort ziehen Muskeln an ausgewählten Chromatophoren. Die Farbsäcke werden größer sichtbar oder schrumpfen wieder. So entsteht innerhalb sehr kurzer Zeit ein neues Muster.\n\nDiese Muster dienen zum Beispiel der Tarnung und der Verständigung. Auf dunklem Untergrund können mehr dunkle Farborgane geöffnet werden. Für ein auffälliges Signal kann das Tier starke Kontraste erzeugen.\n\nMerke dir das Grundprinzip: Nerven steuern Muskeln. Angespannte Muskeln ziehen den Farbstoffsack breit und machen mehr Farbe sichtbar. Entspannte Muskeln lassen ihn schrumpfen und machen weniger Farbe sichtbar. Das Zusammenspiel vieler Chromatophoren erzeugt das gesamte Hautmuster."
@@ -995,6 +995,648 @@ window.EXPERIMENT_UNITS = {
         }
       ]
     }
+  },
+  "unit-3": {
+  "id": "unit-3",
+  "conditionCode": "T1",
+  "primary": {
+    "id": "magnetic-compass",
+    "publicTitle": "Wie ein Kompass die Nordrichtung findet",
+    "pretest": [
+      {
+        "id": "p1",
+        "prompt": "Was ist die Nadel eines einfachen Magnetkompasses?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Ein kleiner, frei beweglicher Magnet"
+          },
+          {
+            "id": "b",
+            "text": "Ein Zeiger, der vom Wind bewegt wird"
+          },
+          {
+            "id": "c",
+            "text": "Ein erwärmter Metallstab ohne Magnetwirkung"
+          },
+          {
+            "id": "d",
+            "text": "Das weiß ich nicht"
+          }
+        ],
+        "correct": "a"
+      },
+      {
+        "id": "p2",
+        "prompt": "Wodurch richtet sich eine ungestörte Kompassnadel hauptsächlich aus?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Durch das Magnetfeld der Erde"
+          },
+          {
+            "id": "b",
+            "text": "Durch das Licht der Sonne"
+          },
+          {
+            "id": "c",
+            "text": "Durch die Fahrtrichtung des Benutzers"
+          },
+          {
+            "id": "d",
+            "text": "Das weiß ich nicht"
+          }
+        ],
+        "correct": "a"
+      },
+      {
+        "id": "p3",
+        "prompt": "Kann ein Lautsprecher oder ein starker Magnet eine Kompassanzeige beeinflussen?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Ja, weil dort ein zusätzliches Magnetfeld wirken kann"
+          },
+          {
+            "id": "b",
+            "text": "Nein, ein Kompass ist gegen jedes Magnetfeld geschützt"
+          },
+          {
+            "id": "c",
+            "text": "Nur wenn gleichzeitig die Sonne scheint"
+          },
+          {
+            "id": "d",
+            "text": "Das weiß ich nicht"
+          }
+        ],
+        "correct": "a"
+      }
+    ],
+    "learning": {
+      "mode": "reading",
+      "durationSeconds": 165,
+      "kicker": "Kurzer Sachtext mit eigenen Stichpunkten",
+      "intro": "Lies den Text aufmerksam. Halte währenddessen drei bis fünf kurze Stichpunkte fest, die du für eine spätere Erklärung wichtig findest.",
+      "sections": [
+        {
+          "title": "Eine frei bewegliche Magnetnadel",
+          "text": "Die Kompassnadel ist ein kleiner, dauerhaft magnetisierter Stab. Sie liegt möglichst reibungsarm auf einer Spitze oder schwimmt in Flüssigkeit, sodass sie sich fast frei drehen kann. Ein Ende ist markiert und wird als Nordende bezeichnet."
+        },
+        {
+          "title": "Das Magnetfeld der Erde",
+          "text": "Um die Erde verläuft ein unsichtbares Magnetfeld. Es übt auf eine bewegliche Magnetnadel eine Drehwirkung aus. Solange die Nadel noch nicht in Feldrichtung liegt, wird sie weitergedreht. Nach kurzem Pendeln richtet sie sich ungefähr entlang des Erdmagnetfelds aus."
+        },
+        {
+          "title": "So wird die Richtung abgelesen",
+          "text": "Das markierte Ende zeigt dann in Richtung des magnetischen Nordens. Die Windrose oder Skala unter der Nadel kann gedreht werden, die frei bewegliche Nadel behält jedoch ihre Ausrichtung. Erst wenn sie ruhig steht, wird die Richtung abgelesen."
+        },
+        {
+          "title": "Magnetisch ist nicht exakt geografisch",
+          "text": "Magnetischer Norden und geografischer Nordpol liegen nicht genau am selben Ort. Der Winkelunterschied heißt Missweisung oder Deklination. Für eine grobe Orientierung ist er oft klein. Bei genauer Navigation muss er je nach Region berücksichtigt werden."
+        },
+        {
+          "title": "Störungen in der Nähe",
+          "text": "Magnete, Lautsprecher, Stahlteile oder starke elektrische Ströme erzeugen eigene Magnetfelder. In ihrer Nähe kann die Nadel abgelenkt werden und eine falsche Richtung anzeigen. Deshalb benutzt man einen Kompass möglichst waagerecht, mit Abstand zu solchen Störquellen, und wartet, bis die Nadel ruhig ist."
+        }
+      ],
+      "notePrompt": "Notiere drei bis fünf kurze Stichpunkte. Schreibe keine vollständige Zusammenfassung.",
+      "closing": "Grundprinzip: Eine frei bewegliche Magnetnadel richtet sich nach dem jeweils wirkenden Magnetfeld aus. Für eine zuverlässige Anzeige muss das Erdmagnetfeld möglichst ungestört wirken."
+    },
+    "immediate": {
+      "recall": {
+        "prompt": "Erkläre mit eigenen Worten, wie ein Kompass die Nordrichtung findet und worauf man bei der Benutzung achten muss.",
+        "criteria": [
+          "Die Nadel ist ein kleiner Magnet und kann sich möglichst frei drehen.",
+          "Das Magnetfeld der Erde übt eine Drehwirkung auf die Nadel aus.",
+          "Nach dem Einpendeln zeigt das markierte Ende ungefähr zum magnetischen Norden.",
+          "Magnetischer und geografischer Norden sind nicht exakt identisch; der Unterschied heißt Deklination oder Missweisung.",
+          "Magnete, Stahlteile oder elektrische Geräte können die Anzeige stören."
+        ]
+      },
+      "understanding": [
+        {
+          "prompt": "Warum zeigt die Nadel nach dem Drehen des Kompassgehäuses wieder in dieselbe Raumrichtung?",
+          "rubric": [
+            "0 Punkte: keine passende Erklärung oder die Skala zieht die Nadel an.",
+            "1 Punkt: Das Erdmagnetfeld oder die freie Bewegung wird erwähnt, aber der Zusammenhang bleibt unvollständig.",
+            "2 Punkte: Nur das Gehäuse beziehungsweise die Skala wurde gedreht; die frei bewegliche Magnetnadel richtet sich weiterhin nach dem Erdmagnetfeld aus."
+          ]
+        },
+        {
+          "prompt": "Warum sollte man einen Kompass nicht direkt neben einem Lautsprecher oder starken Magneten ablesen?",
+          "rubric": [
+            "0 Punkte: keine passende Erklärung.",
+            "1 Punkt: Eine Störung wird genannt, aber nicht erklärt.",
+            "2 Punkte: Das Gerät erzeugt ein zusätzliches Magnetfeld, das die Nadel vom Erdmagnetfeld ablenken und eine falsche Richtung anzeigen kann."
+          ]
+        }
+      ],
+      "sequence": {
+        "prompt": "Bringe die Benutzung eines Kompasses in die richtige Reihenfolge.",
+        "options": [
+          {
+            "id": "distance",
+            "text": "Abstand zu Magneten und größeren Metallteilen herstellen."
+          },
+          {
+            "id": "level",
+            "text": "Den Kompass möglichst waagerecht halten."
+          },
+          {
+            "id": "settle",
+            "text": "Warten, bis die Nadel ruhig eingependelt ist."
+          },
+          {
+            "id": "read",
+            "text": "Die Richtung am markierten Nordende ablesen."
+          }
+        ],
+        "correctOrder": [
+          "distance",
+          "level",
+          "settle",
+          "read"
+        ]
+      },
+      "transfer": [
+        {
+          "id": "t1",
+          "prompt": "Ein ruhig liegender Kompass wird auf der Stelle um 90 Grad gedreht. Was passiert mit der frei beweglichen Nadel nach kurzem Pendeln?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Sie zeigt wieder ungefähr in dieselbe Raumrichtung wie zuvor."
+            },
+            {
+              "id": "b",
+              "text": "Sie bleibt dauerhaft um 90 Grad mit dem Gehäuse verdreht."
+            },
+            {
+              "id": "c",
+              "text": "Sie zeigt nun automatisch nach Süden."
+            },
+            {
+              "id": "d",
+              "text": "Sie verliert sofort ihre Magnetwirkung."
+            }
+          ],
+          "correct": "a",
+          "points": 2
+        },
+        {
+          "id": "t2",
+          "prompt": "Ein Kompass zeigt auf einem Stahltisch eine andere Richtung als einige Meter entfernt auf einer Holzbank. Welche Anzeige ist eher vertrauenswürdig?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Die Anzeige mit größerem Abstand zum Stahltisch."
+            },
+            {
+              "id": "b",
+              "text": "Immer die Anzeige direkt auf dem Stahltisch."
+            },
+            {
+              "id": "c",
+              "text": "Beide müssen unabhängig von der Umgebung exakt gleich sein."
+            },
+            {
+              "id": "d",
+              "text": "Grundsätzlich keine der beiden Anzeigen."
+            }
+          ],
+          "correct": "a",
+          "points": 2
+        }
+      ]
+    },
+    "delayed": {
+      "recall": {
+        "prompt": "Erkläre ohne Hilfe noch einmal, weshalb sich eine Kompassnadel ausrichtet und wodurch eine falsche Anzeige entstehen kann.",
+        "criteria": [
+          "Die Nadel ist magnetisiert und frei beweglich gelagert.",
+          "Das Magnetfeld der Erde übt eine Drehwirkung aus.",
+          "Die Nadel pendelt sich ungefähr in Nord-Süd-Richtung ein.",
+          "Das markierte Ende zeigt magnetischen Norden, der vom geografischen Norden abweichen kann.",
+          "Nahe Magnete, Metall oder starke elektrische Ströme können die Nadel ablenken."
+        ]
+      },
+      "understanding": [
+        {
+          "prompt": "Warum funktioniert ein Magnetkompass auch nachts oder bei bedecktem Himmel?",
+          "rubric": [
+            "0 Punkte: keine passende Erklärung.",
+            "1 Punkt: Die Sonne sei nicht notwendig, aber ohne Begründung.",
+            "2 Punkte: Die Nadel orientiert sich am Magnetfeld der Erde und benötigt deshalb weder sichtbares Sonnenlicht noch Sterne."
+          ]
+        },
+        {
+          "prompt": "Warum kann die Deklination bei einer sehr genauen Navigation wichtig sein?",
+          "rubric": [
+            "0 Punkte: keine passende Erklärung.",
+            "1 Punkt: Magnetischer und geografischer Norden werden als verschieden genannt.",
+            "2 Punkte: Der Kompass zeigt magnetischen Norden, während Karten meist geografischen Norden verwenden; der Winkelunterschied muss bei genauer Navigation berücksichtigt werden."
+          ]
+        }
+      ],
+      "sequence": {
+        "prompt": "Ordne die Schritte für eine möglichst zuverlässige Messung.",
+        "options": [
+          {
+            "id": "remove",
+            "text": "Von einem Lautsprecher oder großen Metallgegenstand weggehen."
+          },
+          {
+            "id": "flat",
+            "text": "Den Kompass waagerecht und ruhig halten."
+          },
+          {
+            "id": "wait",
+            "text": "Das Pendeln der Nadel abwarten."
+          },
+          {
+            "id": "north",
+            "text": "Das markierte Nordende ablesen."
+          }
+        ],
+        "correctOrder": [
+          "remove",
+          "flat",
+          "wait",
+          "north"
+        ]
+      },
+      "transfer": [
+        {
+          "id": "dt1",
+          "prompt": "Im Auto zeigt ein Kompass etwas anderes an als einige Meter außerhalb des Fahrzeugs. Was ist die wahrscheinlichste Ursache?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Metallteile und elektrische Systeme des Autos beeinflussen das Magnetfeld am Kompass."
+            },
+            {
+              "id": "b",
+              "text": "Außerhalb eines Autos gibt es kein Erdmagnetfeld."
+            },
+            {
+              "id": "c",
+              "text": "Die Kompassnadel reagiert ausschließlich auf Geschwindigkeit."
+            },
+            {
+              "id": "d",
+              "text": "Im Auto befindet sich der geografische Nordpol an einer anderen Stelle."
+            }
+          ],
+          "correct": "a",
+          "points": 2
+        },
+        {
+          "id": "dt2",
+          "prompt": "Eine Karte ist nach geografisch Nord ausgerichtet, der Kompass zeigt magnetisch Nord. Was macht man bei einer präzisen Route?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Man berücksichtigt die örtliche Deklination beziehungsweise Missweisung."
+            },
+            {
+              "id": "b",
+              "text": "Man dreht die Karte grundsätzlich um 180 Grad."
+            },
+            {
+              "id": "c",
+              "text": "Man legt den Kompass direkt auf einen Magneten."
+            },
+            {
+              "id": "d",
+              "text": "Man ignoriert jede Richtungsangabe."
+            }
+          ],
+          "correct": "a",
+          "points": 2
+        }
+      ]
+    }
+  },
+  "reserve": {
+    "id": "zipper",
+    "publicTitle": "Wie ein Reißverschluss schließt",
+    "pretest": [
+      {
+        "id": "rp1",
+        "prompt": "Welche Hauptaufgabe hat der Schieber eines Reißverschlusses?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Er führt die beiden Zahnreihen zusammen oder auseinander."
+          },
+          {
+            "id": "b",
+            "text": "Er klebt beide Stoffseiten dauerhaft zusammen."
+          },
+          {
+            "id": "c",
+            "text": "Er erwärmt die Zähne, bis sie weich werden."
+          },
+          {
+            "id": "d",
+            "text": "Das weiß ich nicht"
+          }
+        ],
+        "correct": "a"
+      },
+      {
+        "id": "rp2",
+        "prompt": "Was hält einen geschlossenen Reißverschluss hauptsächlich zusammen?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Die ineinandergreifenden Formen der Zähne oder Spiralen"
+          },
+          {
+            "id": "b",
+            "text": "Ein unsichtbarer Klebstoff im Schieber"
+          },
+          {
+            "id": "c",
+            "text": "Die Wärme der Hand"
+          },
+          {
+            "id": "d",
+            "text": "Das weiß ich nicht"
+          }
+        ],
+        "correct": "a"
+      },
+      {
+        "id": "rp3",
+        "prompt": "Was geschieht im Schieber, wenn der Reißverschluss geöffnet wird?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Der gemeinsame Weg wird in zwei getrennte Wege aufgeteilt."
+          },
+          {
+            "id": "b",
+            "text": "Die Zähne werden abgeschliffen."
+          },
+          {
+            "id": "c",
+            "text": "Beide Stoffbänder werden verkürzt."
+          },
+          {
+            "id": "d",
+            "text": "Das weiß ich nicht"
+          }
+        ],
+        "correct": "a"
+      }
+    ],
+    "learning": {
+      "mode": "reading",
+      "durationSeconds": 165,
+      "kicker": "Kurzer Sachtext mit eigenen Stichpunkten",
+      "intro": "Lies den Text aufmerksam. Halte währenddessen drei bis fünf kurze Stichpunkte fest, die du für eine spätere Erklärung wichtig findest.",
+      "sections": [
+        {
+          "title": "Zwei Reihen von Zähnen",
+          "text": "Ein Reißverschluss besteht aus zwei Stoffbändern mit je einer Reihe kleiner Zähne oder Spiralen. Jeder einzelne Zahn ist so geformt, dass er sich mit einem Zahn der anderen Seite verhaken kann. Die Reihen sind an flexiblen Bändern befestigt, damit sich der Verschluss biegen kann."
+        },
+        {
+          "title": "Der Schieber führt beide Seiten",
+          "text": "Im Inneren des Schiebers verlaufen zwei getrennte Kanäle, die sich zu einem gemeinsamen Kanal verbinden. Wird der Schieber in Schließrichtung gezogen, führt er beide Zahnreihen genau aufeinander zu. Die Form des Schiebers bestimmt, wie eng die Reihen geführt werden."
+        },
+        {
+          "title": "Die Zähne greifen nacheinander ein",
+          "text": "Direkt hinter dem Schieber rasten immer neue Zahnpaare ineinander. Der Schieber klebt die Seiten nicht zusammen. Er sorgt lediglich dafür, dass die passenden Formen in der richtigen Position ineinandergreifen. Hinter dem Schieber trägt die verzahnte Kette die Zugkräfte."
+        },
+        {
+          "title": "In Gegenrichtung öffnet er",
+          "text": "Wird der Schieber zurückgezogen, wirkt sein Inneres wie ein Keil. Der gemeinsame Weg teilt sich wieder in zwei Kanäle. Dadurch werden die ineinandergreifenden Zähne nacheinander voneinander getrennt. Die Trennung läuft ebenfalls Zahn für Zahn."
+        },
+        {
+          "title": "Warum ein Reißverschluss klemmt",
+          "text": "Gerät Stoff in den Schieber, ist ein Zahn verbogen oder steht der Schieber schief, können die Reihen nicht sauber geführt werden. Starkes Ziehen kann die Störung vergrößern. Meist hilft es, den Zug zu entlasten und den eingeklemmten Stoff vorsichtig zu lösen."
+        }
+      ],
+      "notePrompt": "Notiere drei bis fünf kurze Stichpunkte. Schreibe keine vollständige Zusammenfassung.",
+      "closing": "Grundprinzip: Der Schieber hält den Reißverschluss nicht selbst geschlossen. Er führt die passend geformten Zahnreihen so, dass sie ineinandergreifen oder wieder getrennt werden."
+    },
+    "immediate": {
+      "recall": {
+        "prompt": "Erkläre mit eigenen Worten, wie ein Reißverschluss schließt und wieder geöffnet wird.",
+        "criteria": [
+          "Zwei Stoffbänder tragen Reihen aus Zähnen oder Spiralen.",
+          "Der Schieber besitzt getrennte Kanäle, die beim Schließen zusammenlaufen.",
+          "Der Schieber führt die Zahnreihen in die richtige Position.",
+          "Die Zähne greifen nacheinander ineinander und halten den Verschluss geschlossen.",
+          "Beim Öffnen trennt der Schieber die gemeinsame Zahnreihe wieder in zwei Seiten."
+        ]
+      },
+      "understanding": [
+        {
+          "prompt": "Warum reicht es oft nicht, die beiden Zahnreihen einfach mit den Fingern gegeneinanderzudrücken?",
+          "rubric": [
+            "0 Punkte: keine passende Erklärung.",
+            "1 Punkt: Der Schieber wird als notwendig genannt.",
+            "2 Punkte: Der Schieber richtet beide Reihen genau aus und führt die passenden Zähne nacheinander in die richtige Eingriffsposition."
+          ]
+        },
+        {
+          "prompt": "Warum kann ein verbogener oder zu weiter Schieber dazu führen, dass sich der Reißverschluss hinter ihm wieder öffnet?",
+          "rubric": [
+            "0 Punkte: keine passende Erklärung.",
+            "1 Punkt: Die Zähne greifen nicht richtig, aber ohne Ursache.",
+            "2 Punkte: Der Schieber führt oder presst die Reihen nicht mehr eng genug zusammen; die Zähne rasten deshalb nicht vollständig ineinander."
+          ]
+        }
+      ],
+      "sequence": {
+        "prompt": "Bringe das Schließen eines Reißverschlusses in die richtige Reihenfolge.",
+        "options": [
+          {
+            "id": "pull",
+            "text": "Der Schieber wird in Schließrichtung gezogen."
+          },
+          {
+            "id": "guide",
+            "text": "Seine Kanäle führen beide Zahnreihen aufeinander zu."
+          },
+          {
+            "id": "lock",
+            "text": "Die passenden Zähne greifen nacheinander ineinander."
+          },
+          {
+            "id": "hold",
+            "text": "Die verzahnte Kette bleibt hinter dem Schieber geschlossen."
+          }
+        ],
+        "correctOrder": [
+          "pull",
+          "guide",
+          "lock",
+          "hold"
+        ]
+      },
+      "transfer": [
+        {
+          "id": "rt1",
+          "prompt": "Stoff hat sich im Schieber verklemmt. Was ist am sinnvollsten?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Den Zug entlasten, etwas zurückgehen und den Stoff vorsichtig lösen."
+            },
+            {
+              "id": "b",
+              "text": "Mit möglichst großer Kraft weiterziehen."
+            },
+            {
+              "id": "c",
+              "text": "Die Zahnreihen erhitzen."
+            },
+            {
+              "id": "d",
+              "text": "Den Stoff noch tiefer in den Schieber drücken."
+            }
+          ],
+          "correct": "a",
+          "points": 2
+        },
+        {
+          "id": "rt2",
+          "prompt": "Ein Zahn fehlt vollständig. Welche Folge ist besonders wahrscheinlich?",
+          "options": [
+            {
+              "id": "a",
+              "text": "An dieser Stelle kann die geschlossene Kette leichter aufgehen."
+            },
+            {
+              "id": "b",
+              "text": "Der Reißverschluss wird dadurch automatisch stärker."
+            },
+            {
+              "id": "c",
+              "text": "Der Schieber erzeugt dort neuen Klebstoff."
+            },
+            {
+              "id": "d",
+              "text": "Das Öffnen wird grundsätzlich unmöglich."
+            }
+          ],
+          "correct": "a",
+          "points": 2
+        }
+      ]
+    },
+    "delayed": {
+      "recall": {
+        "prompt": "Erkläre ohne Hilfe noch einmal, welche Aufgabe der Schieber hat und warum die Zähne danach zusammenhalten.",
+        "criteria": [
+          "Der Reißverschluss besitzt zwei Zahn- oder Spiralreihen.",
+          "Der Schieber führt beide Reihen durch geformte Kanäle.",
+          "Beim Schließen werden die Reihen zusammengeführt.",
+          "Die passenden Formen greifen ineinander und tragen danach die Zugkräfte.",
+          "Beim Öffnen trennt der Schieber die gemeinsame Reihe wieder."
+        ]
+      },
+      "understanding": [
+        {
+          "prompt": "Warum bleibt ein Reißverschluss nach dem Vorbeiziehen des Schiebers geschlossen, obwohl der Schieber schon weitergezogen wurde?",
+          "rubric": [
+            "0 Punkte: keine passende Erklärung oder der Schieber klebt die Seiten.",
+            "1 Punkt: Die Zähne halten zusammen, aber ohne Erklärung.",
+            "2 Punkte: Die passend geformten Zähne beziehungsweise Spiralen greifen ineinander und halten die Kette auch hinter dem Schieber geschlossen."
+          ]
+        },
+        {
+          "prompt": "Warum kann starkes Ziehen einen klemmenden Reißverschluss weiter beschädigen?",
+          "rubric": [
+            "0 Punkte: keine passende Erklärung.",
+            "1 Punkt: Es entsteht mehr Belastung, aber ohne Bezug zu den Bauteilen.",
+            "2 Punkte: Der eingeklemmte Stoff, die Zähne oder der Schieber werden stärker verkeilt beziehungsweise verbogen, statt sauber geführt zu werden."
+          ]
+        }
+      ],
+      "sequence": {
+        "prompt": "Ordne den Öffnungsvorgang.",
+        "options": [
+          {
+            "id": "reverse",
+            "text": "Der Schieber wird in Öffnungsrichtung bewegt."
+          },
+          {
+            "id": "wedge",
+            "text": "Sein innerer Keil drängt die beiden Seiten auseinander."
+          },
+          {
+            "id": "separate",
+            "text": "Die Zähne lösen sich nacheinander voneinander."
+          },
+          {
+            "id": "two",
+            "text": "Es entstehen wieder zwei getrennte Zahnreihen."
+          }
+        ],
+        "correctOrder": [
+          "reverse",
+          "wedge",
+          "separate",
+          "two"
+        ]
+      },
+      "transfer": [
+        {
+          "id": "rdt1",
+          "prompt": "Ein Schieber wurde seitlich aufgebogen und ist nun etwas zu weit. Was kann beim Schließen passieren?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Die Reihen werden nicht eng genug geführt und greifen unvollständig ineinander."
+            },
+            {
+              "id": "b",
+              "text": "Die Zähne werden automatisch größer."
+            },
+            {
+              "id": "c",
+              "text": "Der Stoff wird magnetisch."
+            },
+            {
+              "id": "d",
+              "text": "Der Reißverschluss kann nur noch schneller schließen."
+            }
+          ],
+          "correct": "a",
+          "points": 2
+        },
+        {
+          "id": "rdt2",
+          "prompt": "Warum kann derselbe Schieber sowohl schließen als auch öffnen?",
+          "options": [
+            {
+              "id": "a",
+              "text": "Je nach Bewegungsrichtung führen seine Kanäle die Reihen zusammen oder trennen sie."
+            },
+            {
+              "id": "b",
+              "text": "Er wechselt beim Umdrehen seinen Klebstoff."
+            },
+            {
+              "id": "c",
+              "text": "Die Zähne verschwinden beim Öffnen."
+            },
+            {
+              "id": "d",
+              "text": "Die Bewegungsrichtung spielt keine Rolle."
+            }
+          ],
+          "correct": "a",
+          "points": 2
+        }
+      ]
+    }
   }
+}
 }
 };

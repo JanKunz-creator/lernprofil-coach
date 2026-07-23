@@ -1,17 +1,17 @@
-const CACHE_NAME = "lernprofil-coach-v0.3.6";
+const CACHE_NAME = "lernprofil-coach-v0.4.0";
 
 const APP_FILES = [
   "./",
-  "./index.html?v=036",
-  "./styles.css?v=036",
-  "./modules.js?v=036",
-  "./experiment-data.js?v=036",
-  "./app.js?v=036",
-  "./manifest.webmanifest?v=036",
-  "./icons/icon-192.png?v=036",
-  "./icons/icon-512.png?v=036",
-  "./audio-bienen.mp3?v=036",
-  "./audio-tintenfisch.mp3?v=036"
+  "./index.html?v=040",
+  "./styles.css?v=040",
+  "./modules.js?v=040",
+  "./experiment-data.js?v=040",
+  "./app.js?v=040",
+  "./manifest.webmanifest?v=040",
+  "./icons/icon-192.png?v=040",
+  "./icons/icon-512.png?v=040",
+  "./audio-bienen.mp3?v=040",
+  "./audio-tintenfisch.mp3?v=040"
 ];
 
 self.addEventListener("install", event => {
@@ -46,11 +46,11 @@ self.addEventListener("fetch", event => {
       fetch(event.request, { cache: "no-store" })
         .then(response => {
           const copy = response.clone();
-          caches.open(CACHE_NAME).then(cache => cache.put("./index.html?v=036", copy));
+          caches.open(CACHE_NAME).then(cache => cache.put("./index.html?v=040", copy));
           return response;
         })
         .catch(() =>
-          caches.match("./index.html?v=036").then(cached => cached || caches.match("./"))
+          caches.match("./index.html?v=040").then(cached => cached || caches.match("./"))
         )
     );
     return;

@@ -812,3 +812,121 @@ button { cursor: pointer; }
   white-space: pre-wrap;
   font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
 }
+
+
+/* Lesend-schriftliche Lernbedingung ab Version 0.4.0 */
+.reading-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1.55fr) minmax(270px, .8fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.reading-sheet,
+.reading-notes {
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 6px 22px rgba(16,49,47,.05);
+}
+
+.reading-sheet {
+  padding: clamp(1.15rem, 3vw, 1.8rem);
+}
+
+.reading-intro {
+  margin-top: 0;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.reading-section + .reading-section {
+  margin-top: 1rem;
+}
+
+.reading-section h2 {
+  margin: 0 0 .28rem;
+  font-size: 1.04rem;
+  line-height: 1.25;
+}
+
+.reading-section p {
+  margin: 0;
+  line-height: 1.62;
+}
+
+.reading-closing {
+  margin-top: 1.2rem;
+  padding: .9rem 1rem;
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  background: #fff8eb;
+}
+
+.reading-closing p {
+  margin: .25rem 0 0;
+}
+
+.reading-notes {
+  position: sticky;
+  top: 92px;
+  padding: 1rem;
+}
+
+.reading-notes h2 {
+  margin: 0 0 .3rem;
+  font-size: 1.05rem;
+}
+
+.reading-notes p {
+  margin: 0 0 .7rem;
+  color: var(--muted);
+  font-size: .9rem;
+}
+
+.reading-notes textarea {
+  width: 100%;
+  min-height: 220px;
+  resize: vertical;
+  padding: .8rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--text);
+  background: #fbfdfd;
+  line-height: 1.5;
+}
+
+.reading-notes textarea:focus {
+  outline: 3px solid rgba(242,169,59,.35);
+  border-color: var(--primary);
+}
+
+.note-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: .6rem;
+  margin-top: .55rem;
+  color: var(--muted);
+  font-size: .76rem;
+}
+
+.note-meta span:first-child {
+  color: var(--primary);
+  font-weight: 850;
+}
+
+@media (max-width: 780px) {
+  .reading-stage {
+    grid-template-columns: 1fr;
+  }
+
+  .reading-notes {
+    position: static;
+  }
+
+  .reading-notes textarea {
+    min-height: 150px;
+  }
+}
