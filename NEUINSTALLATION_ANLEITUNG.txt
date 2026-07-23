@@ -1,0 +1,18 @@
+LERNPROFIL-COACH v0.3.6 – KOMPLETT BEREINIGTE VERSION
+
+Wichtig:
+Nicht das Repository selbst löschen, sondern nur dessen Dateien und Ordner.
+Die GitHub-Pages-Einstellung bleibt dadurch erhalten.
+
+Danach ALLE Inhalte dieses Pakets direkt in das Hauptverzeichnis hochladen.
+
+Commit-Nachricht:
+Version 0.3.6 – Repository vollständig bereinigt
+
+Nach dem grünen Haken bei GitHub Actions öffnen:
+https://jankunz-creator.github.io/lernprofil-coach/?testmodus=1&v=036
+
+Unten links muss Version 0.3.6 stehen.
+
+Direkter Audiotest:
+https://jankunz-creator.github.io/lernprofil-coach/audio-bienen.mp3
