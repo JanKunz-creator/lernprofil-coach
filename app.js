@@ -1195,7 +1195,10 @@
 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      navigator.serviceWorker.register("./service-worker.js").catch(error => console.warn("Service Worker konnte nicht registriert werden.", error));
+      navigator.serviceWorker
+        .register("./service-worker.js?v=023", { updateViaCache: "none" })
+        .then(registration => registration.update())
+        .catch(error => console.warn("Service Worker konnte nicht registriert werden.", error));
     });
   }
 
