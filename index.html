@@ -16,7 +16,7 @@
 </head>
 <body>
   <header class="app-header">
-    <a class="brand" href="./">
+    <a class="brand" href="./" aria-label="Zur Startseite">
       <span class="brand-icon">LP</span>
       <span>
         <strong>Lernprofil-Coach</strong>
@@ -26,16 +26,17 @@
     <span id="network" class="network">Online</span>
   </header>
 
-  <main id="app" class="app-shell"></main>
+  <main id="app" class="app-shell" tabindex="-1"></main>
 
   <footer class="app-footer">
-    <span>Version 0.1.1</span>
+    <span>Version 0.2.0</span>
     <span>Daten bleiben lokal auf diesem Gerät</span>
   </footer>
 
   <noscript>Für diese App muss JavaScript aktiviert sein.</noscript>
 
   <script src="./modules.js"></script>
+  <script src="./experiment-data.js"></script>
   <script src="./app.js"></script>
 </body>
 </html>

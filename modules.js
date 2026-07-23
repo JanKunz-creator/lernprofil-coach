@@ -4,62 +4,20 @@ window.LEARNING_MODULES = [
     number: "D",
     title: "Technik-Demo",
     subtitle: "Prüft Navigation, Speicherung und Auswertung",
-    status: "ready"
+    availability: "demo"
   },
   {
-    id: "einheit-1",
+    id: "unit-1",
     number: 1,
     title: "Versuchseinheit 1",
-    subtitle: "Lernmaterial folgt im nächsten Ausbau",
-    status: "planned"
+    subtitle: "Eigenständiges Thema mit Sofort- und Erinnerungstest",
+    availability: "ready"
   },
-  {
-    id: "einheit-2",
-    number: 2,
-    title: "Versuchseinheit 2",
-    subtitle: "Lernmaterial folgt im nächsten Ausbau",
-    status: "planned"
-  },
-  {
-    id: "einheit-3",
-    number: 3,
-    title: "Versuchseinheit 3",
-    subtitle: "Lernmaterial folgt im nächsten Ausbau",
-    status: "planned"
-  },
-  {
-    id: "einheit-4",
-    number: 4,
-    title: "Versuchseinheit 4",
-    subtitle: "Lernmaterial folgt im nächsten Ausbau",
-    status: "planned"
-  },
-  {
-    id: "einheit-5",
-    number: 5,
-    title: "Versuchseinheit 5",
-    subtitle: "Lernmaterial folgt im nächsten Ausbau",
-    status: "planned"
-  },
-  {
-    id: "einheit-6",
-    number: 6,
-    title: "Versuchseinheit 6",
-    subtitle: "Lernmaterial folgt im nächsten Ausbau",
-    status: "planned"
-  },
-  {
-    id: "einheit-7",
-    number: 7,
-    title: "Versuchseinheit 7",
-    subtitle: "Lernmaterial folgt im nächsten Ausbau",
-    status: "planned"
-  },
-  {
-    id: "einheit-8",
-    number: 8,
-    title: "Versuchseinheit 8",
-    subtitle: "Lernmaterial folgt im nächsten Ausbau",
-    status: "planned"
-  }
+  ...Array.from({ length: 7 }, (_, index) => ({
+    id: `unit-${index + 2}`,
+    number: index + 2,
+    title: `Versuchseinheit ${index + 2}`,
+    subtitle: "Eigenständiges Thema, wird im nächsten Ausbau ergänzt",
+    availability: "planned"
+  }))
 ];

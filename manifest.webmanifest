@@ -1,7 +1,7 @@
 {
   "name": "Lernprofil-Coach",
   "short_name": "Lernprofil",
-  "description": "Quantifizierbarer Lernversuch zur Bestimmung individueller Lernpräferenzen.",
+  "description": "PWA für acht unabhängige, quantifizierbare Lernversuche mit Sofort- und Erinnerungstest.",
   "lang": "de-DE",
   "start_url": "./",
   "scope": "./",

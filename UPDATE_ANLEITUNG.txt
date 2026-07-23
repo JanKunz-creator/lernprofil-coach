@@ -1,0 +1,21 @@
+LERNPROFIL-COACH – UPDATE AUF VERSION 0.2.0
+
+1. Diese ZIP-Datei vollständig entpacken.
+2. Im GitHub-Repository auf „Add file / Datei hinzufügen“ klicken.
+3. „Upload files / Dateien hochladen“ wählen.
+4. ALLE entpackten Dateien und den Ordner „icons“ in das Upload-Feld ziehen.
+5. Vorhandene Dateien ersetzen lassen.
+6. Commit-Nachricht:
+   Version 0.2.0 – erste echte Versuchseinheit
+7. Nach dem grünen Haken unter GitHub Actions die App öffnen:
+   https://jankunz-creator.github.io/Lernprofil-Coach/?v=020
+8. Falls noch die alte Version erscheint: Strg+F5 oder privates Browserfenster verwenden.
+
+NORMALER VERSUCH
+Die Wartezeit bis zum Erinnerungstest beträgt 24 Stunden.
+
+TECHNISCHER TESTMODUS
+Zum Testen der vollständigen Funktion kann diese Adresse verwendet werden:
+https://jankunz-creator.github.io/Lernprofil-Coach/?testmodus=1
+Dann wird der Erinnerungstest nach zwei Minuten freigeschaltet.
+Die Ergebnisse aus dem Testmodus dürfen nicht als Lernprofil verwendet werden.
