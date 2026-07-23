@@ -487,9 +487,16 @@
       </div>
     `, "Startcheck");
 
-    bindRatings(unitState.context);
     const button = document.querySelector("#continueButton");
+
+    bindRatings(unitState.context, () => {
+      if (button) {
+        button.disabled = !ratingsComplete(unitState.context, ["energy", "mood", "focus"]);
+      }
+    });
+
     if (button) button.addEventListener("click", () => {
+      if (!ratingsComplete(unitState.context, ["energy", "mood", "focus"])) return;
       state.active.stage = "pretest";
       state.active.index = 0;
       saveState();
@@ -1098,9 +1105,21 @@
       <div class="actions"><button class="btn btn-dark" id="finishButton" ${Object.values(ratings).every(Boolean) ? "" : "disabled"}>Einheit speichern</button></div>
     `, "Keine richtige oder falsche Antwort");
 
-    bindRatings(ratings);
     const finishButton = document.querySelector("#finishButton");
-    if (finishButton) finishButton.addEventListener("click", () => finishTest("immediate"));
+
+    bindRatings(ratings, () => {
+      if (finishButton) {
+        finishButton.disabled = !ratingsComplete(
+          ratings,
+          ["effort", "interest", "confidence", "repeat"]
+        );
+      }
+    });
+
+    if (finishButton) finishButton.addEventListener("click", () => {
+      if (!ratingsComplete(ratings, ["effort", "interest", "confidence", "repeat"])) return;
+      finishTest("immediate");
+    });
   }
 
   function finishTest(phase) {
@@ -1397,20 +1416,49 @@
       <div class="rating-block">
         <p class="question">${esc(label)}</p>
         <div class="rating" data-rating-field="${field}">
-          ${[1, 2, 3, 4, 5].map(value => `<button type="button" data-rating-value="${value}" class="${Number(selected) === value ? "selected" : ""}">${value}</button>`).join("")}
+          ${[1, 2, 3, 4, 5].map(value => `
+            <button
+              type="button"
+              data-rating-value="${value}"
+              class="${Number(selected) === value ? "selected" : ""}"
+              aria-pressed="${Number(selected) === value ? "true" : "false"}"
+            >${value}</button>
+          `).join("")}
         </div>
         <p class="help">${esc(scaleText)}</p>
       </div>
     `;
   }
 
-  function bindRatings(target) {
+  function ratingsComplete(target, fields) {
+    return fields.every(field => {
+      const value = Number(target[field]);
+      return Number.isInteger(value) && value >= 1 && value <= 5;
+    });
+  }
+
+  function bindRatings(target, onChange = null) {
     document.querySelectorAll("[data-rating-field]").forEach(group => {
-      group.querySelectorAll("[data-rating-value]").forEach(button => {
-        button.addEventListener("click", () => {
-          target[group.dataset.ratingField] = Number(button.dataset.ratingValue);
+      const field = group.dataset.ratingField;
+      const buttons = Array.from(group.querySelectorAll("[data-rating-value]"));
+
+      buttons.forEach(button => {
+        button.addEventListener("click", event => {
+          event.preventDefault();
+
+          const value = Number(button.dataset.ratingValue);
+          if (!Number.isInteger(value) || value < 1 || value > 5) return;
+
+          target[field] = value;
+
+          buttons.forEach(item => {
+            const selected = Number(item.dataset.ratingValue) === value;
+            item.classList.toggle("selected", selected);
+            item.setAttribute("aria-pressed", selected ? "true" : "false");
+          });
+
           saveState();
-          render();
+          if (typeof onChange === "function") onChange(field, value);
         });
       });
     });
@@ -1495,7 +1543,7 @@
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
       navigator.serviceWorker
-        .register("./service-worker.js?v=030", { updateViaCache: "none" })
+        .register("./service-worker.js?v=031", { updateViaCache: "none" })
         .then(registration => registration.update())
         .catch(error => console.warn("Service Worker konnte nicht registriert werden.", error));
     });
