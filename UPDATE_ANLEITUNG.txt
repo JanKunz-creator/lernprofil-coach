@@ -1,31 +1,23 @@
-LERNPROFIL-COACH v0.3.4 – AUDIO-FIX
+LERNPROFIL-COACH v0.3.5 – NOTEBOOKLM-AUDIO
 
-Ursache:
-Die MP3-Dateien waren technisch in Ordnung, wurden aber auf der veröffentlichten
-Seite nicht am erwarteten Unterordner-Pfad geladen.
-
-Änderung:
-- Beide MP3-Dateien liegen jetzt direkt im Hauptverzeichnis.
-- Eindeutige Dateinamen verhindern alte Cache-Treffer:
-  audio-bienen-034.mp3
-  audio-tintenfisch-034.mp3
-- Der Player kann nach einem Ladefehler erneut laden.
-- Eine genaue Fehlermeldung zeigt künftig den erwarteten Dateinamen.
+Neu:
+- Die bisherige künstliche Bienen-Aufnahme wurde durch die neue NotebookLM-Aufnahme ersetzt.
+- Dauer: ungefähr 1 Minute 50 Sekunden.
+- Neue eindeutige Datei: audio-bienen-035.mp3
+- Die Reservethemen-Aufnahme zum Tintenfisch ist noch die bisherige Version.
 
 UPLOAD:
 1. ZIP entpacken.
-2. ALLE Dateien und Ordner aus dem Paket ins Hauptverzeichnis des Repositorys hochladen.
+2. ALLE Dateien und Ordner aus dem Paket in das Hauptverzeichnis des Repositorys hochladen.
 3. Vorhandene index.html ersetzen lassen.
-4. Wichtig: Die beiden MP3-Dateien müssen direkt neben index.html liegen.
+4. Wichtig: audio-bienen-035.mp3 muss direkt neben index.html liegen.
 5. Commit-Nachricht:
-   Version 0.3.4 – Audioaufnahme repariert
+   Version 0.3.5 – natürliche NotebookLM-Audioaufnahme
 6. Unter Actions auf den grünen Haken warten.
 7. Öffnen:
-   https://jankunz-creator.github.io/lernprofil-coach/?testmodus=1&v=034
+   https://jankunz-creator.github.io/lernprofil-coach/?testmodus=1&v=035
 
-Unten links muss Version 0.3.4 stehen.
+Direkter Audiotest:
+https://jankunz-creator.github.io/lernprofil-coach/audio-bienen-035.mp3
 
-Direkter Kontrolltest im Browser:
-https://jankunz-creator.github.io/lernprofil-coach/audio-bienen-034.mp3
-
-Unter dieser Adresse muss die Aufnahme direkt abspielbar sein.
+Unten links muss Version 0.3.5 stehen.

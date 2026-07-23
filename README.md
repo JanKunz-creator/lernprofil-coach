@@ -1,7 +1,6 @@
-# Lernprofil-Coach 0.3.4
+# Lernprofil-Coach 0.3.5
 
-Audio-Fix für Versuchseinheit 2.
+Die auditive Bienen-Einheit verwendet jetzt die natürliche NotebookLM-Aufnahme:
 
-Die Audiodateien liegen direkt im Hauptverzeichnis:
-- audio-bienen-034.mp3
-- audio-tintenfisch-034.mp3
+- `audio-bienen-035.mp3`
+- Dauer: ca. 1:50 Minuten
