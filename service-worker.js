@@ -1,11 +1,11 @@
-const CACHE_NAME = "lernprofil-coach-v0.2.1";
+const CACHE_NAME = "lernprofil-coach-v0.2.2";
 const APP_FILES = [
   "./",
   "./index.html",
-  "./styles.css",
-  "./modules.js?v=021",
-  "./experiment-data.js?v=021",
-  "./app.js?v=021",
+  "./styles.css?v=022",
+  "./modules.js?v=022",
+  "./experiment-data.js?v=022",
+  "./app.js?v=022",
   "./manifest.webmanifest",
   "./icons/icon-192.png",
   "./icons/icon-512.png"

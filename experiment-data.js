@@ -1,5 +1,5 @@
 window.EXPERIMENT_CONFIG = {
-  version: "0.2.0",
+  version: "0.2.2",
   learningSeconds: 360,
   delayedHours: 24,
   testModeDelayMinutes: 2,

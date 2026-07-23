@@ -161,9 +161,11 @@
 
   function renderHome() {
     const name = state.participant.name.trim();
-    const profileReady = Boolean(name && /^\d{4}$/.test(state.participant.parentPin));
+    const participantReady = Boolean(name);
+    const pinReady = /^\d{4}$/.test(state.participant.parentPin);
+    const experimentReady = participantReady && pinReady;
     const unit1 = getUnitState("unit-1");
-    const rows = window.LEARNING_MODULES.map(module => renderModuleRow(module, profileReady)).join("");
+    const rows = window.LEARNING_MODULES.map(module => renderModuleRow(module, experimentReady)).join("");
 
     app.innerHTML = `
       ${isTestMode ? `
@@ -180,14 +182,18 @@
           Übertragung und Erinnerung. Die Lernbedingungen und Zwischenstände bleiben verborgen.
         </p>
         <div class="actions">
-          <button class="btn btn-primary" id="profileButton">${profileReady ? "Profil bearbeiten" : "Profil vervollständigen"}</button>
-          <button class="btn btn-light" id="parentButton">Elternbereich</button>
+          <button class="btn btn-primary" id="profileButton">${participantReady ? "Profil bearbeiten" : "Profil anlegen"}</button>
+          <button class="btn btn-light" id="parentButton">${pinReady ? "Elternbereich" : "Elternbereich einrichten"}</button>
         </div>
       </section>
 
-      ${!profileReady ? `
+      ${!participantReady ? `
         <section class="section notice">
-          Vor dem ersten echten Lernversuch bitte Name und eine vierstellige Eltern-PIN hinterlegen.
+          Vor dem ersten echten Lernversuch bitte das Teilnehmerprofil anlegen. Die Eltern-PIN wird getrennt im Elternbereich festgelegt.
+        </section>
+      ` : !pinReady ? `
+        <section class="section notice">
+          Das Teilnehmerprofil ist vollständig. Bitte jetzt im Elternbereich eine vierstellige PIN festlegen.
         </section>
       ` : ""}
 
@@ -233,10 +239,10 @@
     document.querySelector("#profileButton").addEventListener("click", () => go("profile"));
     document.querySelector("#parentButton").addEventListener("click", () => go("parent"));
     document.querySelector("#exportButton").addEventListener("click", exportData);
-    bindModuleButtons(profileReady, unit1);
+    bindModuleButtons(experimentReady, unit1);
   }
 
-  function renderModuleRow(module, profileReady) {
+  function renderModuleRow(module, experimentReady) {
     if (module.id === "technik-demo") {
       return `
         <div class="module">
@@ -261,7 +267,7 @@
     const progress = unitProgress(unitState);
     let actionLabel = "starten";
     let action = "start-unit";
-    let disabled = !profileReady;
+    let disabled = !experimentReady;
     let statusText = "bereit";
 
     if (unitState.status === "in_progress") {
@@ -304,12 +310,15 @@
     `;
   }
 
-  function bindModuleButtons(profileReady) {
+  function bindModuleButtons(experimentReady) {
     document.querySelectorAll("[data-action]").forEach(button => {
       button.addEventListener("click", () => {
         const action = button.dataset.action;
         if (action === "demo") return startDemo();
-        if (!profileReady) return go("profile");
+        if (!experimentReady) {
+          if (!state.participant.name.trim()) return go("profile");
+          return go("parent");
+        }
         if (action === "start-unit") return startOrResumeUnit("unit-1");
         if (action === "start-delayed") return startDelayed("unit-1");
       });
@@ -333,11 +342,6 @@
             <label for="age">Alter <span class="help">(optional)</span></label>
             <input id="age" name="age" type="number" min="6" max="99" value="${esc(state.participant.age)}" placeholder="12">
           </div>
-          <div class="form-group">
-            <label for="parentPin">Vierstellige Eltern-PIN</label>
-            <input id="parentPin" name="parentPin" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" value="${esc(state.participant.parentPin)}" placeholder="Vier Ziffern" required>
-            <p class="help">Die PIN schützt die Bewertungskriterien vor dem Kind. Bitte gut merken.</p>
-          </div>
           <p class="notice">Alle Angaben und Ergebnisse bleiben lokal im Browser dieses Geräts.</p>
           <div class="actions">
             <button class="btn btn-dark" type="submit">Profil speichern</button>
@@ -352,14 +356,8 @@
     document.querySelector("#profileForm").addEventListener("submit", event => {
       event.preventDefault();
       const data = new FormData(event.currentTarget);
-      const pin = String(data.get("parentPin") || "").trim();
-      if (!/^\d{4}$/.test(pin)) {
-        window.alert("Bitte eine vierstellige PIN aus Ziffern eingeben.");
-        return;
-      }
       state.participant.name = String(data.get("name") || "").trim();
       state.participant.age = String(data.get("age") || "").trim();
-      state.participant.parentPin = pin;
       saveState();
       go("home");
     });
@@ -916,26 +914,111 @@
   }
 
   function renderParentArea() {
+    const pinExists = /^\d{4}$/.test(state.participant.parentPin);
+
+    if (!pinExists) {
+      app.innerHTML = pageShell("Elternbereich einrichten", `
+        <div class="parent-gate">
+          <h2>Eltern-PIN festlegen</h2>
+          <p>
+            Die PIN schützt Bewertungskriterien, Rücksetzfunktionen und Versuchsdaten.
+            Sie wird nur auf diesem Gerät gespeichert.
+          </p>
+          <form id="parentPinSetupForm">
+            <div class="form-group pin-group">
+              <label for="newParentPin">Neue vierstellige PIN</label>
+              <input
+                id="newParentPin"
+                name="newParentPin"
+                inputmode="numeric"
+                pattern="[0-9]{4}"
+                maxlength="4"
+                type="password"
+                autocomplete="new-password"
+                placeholder="••••"
+                required
+              >
+            </div>
+            <div class="form-group pin-group">
+              <label for="repeatParentPin">PIN wiederholen</label>
+              <input
+                id="repeatParentPin"
+                name="repeatParentPin"
+                inputmode="numeric"
+                pattern="[0-9]{4}"
+                maxlength="4"
+                type="password"
+                autocomplete="new-password"
+                placeholder="••••"
+                required
+              >
+            </div>
+            <p class="error-message" id="parentPinSetupError" hidden></p>
+            <div class="actions">
+              <button class="btn btn-dark" type="submit">PIN festlegen</button>
+              <button class="btn btn-ghost" type="button" id="backButton">Zurück</button>
+            </div>
+          </form>
+        </div>
+      `, "Einmalige Einrichtung");
+
+      document.querySelector("#backButton").addEventListener("click", () => go("home"));
+      document.querySelector("#parentPinSetupForm").addEventListener("submit", event => {
+        event.preventDefault();
+        const firstPin = document.querySelector("#newParentPin").value.trim();
+        const secondPin = document.querySelector("#repeatParentPin").value.trim();
+        const error = document.querySelector("#parentPinSetupError");
+
+        if (!/^\d{4}$/.test(firstPin)) {
+          error.textContent = "Bitte eine vierstellige PIN aus Ziffern eingeben.";
+          error.hidden = false;
+          return;
+        }
+
+        if (firstPin !== secondPin) {
+          error.textContent = "Die beiden PIN-Eingaben stimmen nicht überein.";
+          error.hidden = false;
+          return;
+        }
+
+        state.participant.parentPin = firstPin;
+        saveState();
+        renderParentDashboard();
+      });
+      return;
+    }
+
     app.innerHTML = pageShell("Elternbereich", `
       <div class="parent-gate">
         <h2>PIN eingeben</h2>
         <p>Hier können Sicherungen erstellt oder eine begonnene Testeinheit zurückgesetzt werden.</p>
-        <div class="form-group pin-group">
-          <label for="parentAreaPin">Eltern-PIN</label>
-          <input id="parentAreaPin" inputmode="numeric" maxlength="4" type="password" placeholder="••••">
-        </div>
-        <p class="error-message" id="parentAreaError" hidden>Die PIN stimmt nicht.</p>
-        <div class="actions">
-          <button class="btn btn-dark" id="openParentArea">Öffnen</button>
-          <button class="btn btn-ghost" id="backButton">Zurück</button>
-        </div>
+        <form id="parentLoginForm">
+          <div class="form-group pin-group">
+            <label for="parentAreaPin">Eltern-PIN</label>
+            <input
+              id="parentAreaPin"
+              inputmode="numeric"
+              maxlength="4"
+              type="password"
+              autocomplete="current-password"
+              placeholder="••••"
+              required
+            >
+          </div>
+          <p class="error-message" id="parentAreaError" hidden>Die PIN stimmt nicht.</p>
+          <div class="actions">
+            <button class="btn btn-dark" type="submit">Öffnen</button>
+            <button class="btn btn-ghost" type="button" id="backButton">Zurück</button>
+          </div>
+        </form>
       </div>
     `, "Geschützt");
 
     document.querySelector("#backButton").addEventListener("click", () => go("home"));
-    document.querySelector("#openParentArea").addEventListener("click", () => {
-      const pin = document.querySelector("#parentAreaPin").value;
-      if (!state.participant.parentPin || pin !== state.participant.parentPin) {
+    document.querySelector("#parentLoginForm").addEventListener("submit", event => {
+      event.preventDefault();
+      const pin = document.querySelector("#parentAreaPin").value.trim();
+      if (pin !== state.participant.parentPin) {
         document.querySelector("#parentAreaError").hidden = false;
         return;
       }
