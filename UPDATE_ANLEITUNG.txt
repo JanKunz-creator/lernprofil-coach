@@ -1,21 +1,24 @@
-LERNPROFIL-COACH – UPDATE AUF VERSION 0.2.0
+LERNPROFIL-COACH v0.3.3 – STABILE NEUFASSUNG
 
-1. Diese ZIP-Datei vollständig entpacken.
-2. Im GitHub-Repository auf „Add file / Datei hinzufügen“ klicken.
-3. „Upload files / Dateien hochladen“ wählen.
-4. ALLE entpackten Dateien und den Ordner „icons“ in das Upload-Feld ziehen.
-5. Vorhandene Dateien ersetzen lassen.
-6. Commit-Nachricht:
-   Version 0.2.0 – erste echte Versuchseinheit
-7. Nach dem grünen Haken unter GitHub Actions die App öffnen:
-   https://jankunz-creator.github.io/Lernprofil-Coach/?v=020
-8. Falls noch die alte Version erscheint: Strg+F5 oder privates Browserfenster verwenden.
+Neue eindeutige Kerndateien:
+- styles-033.css
+- modules-033.js
+- experiment-data-033.js
+- app-033.js
+- service-worker-033.js
 
-NORMALER VERSUCH
-Die Wartezeit bis zum Erinnerungstest beträgt 24 Stunden.
+UPLOAD:
+1. ZIP entpacken.
+2. In GitHub auf Datei hinzufügen -> Dateien hochladen.
+3. ALLE Dateien und Ordner aus dem Paket hochladen.
+4. Die vorhandene index.html ersetzen lassen.
+5. Commit-Nachricht:
+   Version 0.3.3 – stabile Neufassung
+6. Unter Actions auf den grünen Haken warten.
+7. Öffnen:
+   https://jankunz-creator.github.io/lernprofil-coach/?testmodus=1&v=033
 
-TECHNISCHER TESTMODUS
-Zum Testen der vollständigen Funktion kann diese Adresse verwendet werden:
-https://jankunz-creator.github.io/Lernprofil-Coach/?testmodus=1
-Dann wird der Erinnerungstest nach zwei Minuten freigeschaltet.
-Die Ergebnisse aus dem Testmodus dürfen nicht als Lernprofil verwendet werden.
+Unten links muss Version 0.3.3 stehen.
+
+Falls eine Datei fehlt, erscheint jetzt eine genaue Fehlermeldung
+statt einer leeren Seite.

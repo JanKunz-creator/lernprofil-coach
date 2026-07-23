@@ -9,10 +9,51 @@
   <meta name="apple-mobile-web-app-title" content="Lernprofil">
   <title>Lernprofil-Coach</title>
 
-  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="manifest" href="./manifest.webmanifest?v=033">
   <link rel="icon" href="./icons/icon-192.png">
   <link rel="apple-touch-icon" href="./icons/icon-192.png">
-  <link rel="stylesheet" href="./styles.css?v=032">
+  <link rel="stylesheet" href="./styles-033.css?v=033">
+
+  <script>
+    window.__LP_BOOT = { version: "0.3.3", loaded: {}, errors: [] };
+
+    window.addEventListener("error", function (event) {
+      window.__LP_BOOT.errors.push(
+        event.message || ("Datei konnte nicht geladen werden: " + (event.filename || "unbekannt"))
+      );
+    });
+
+    function lpAssetLoaded(name) {
+      window.__LP_BOOT.loaded[name] = true;
+    }
+
+    function lpAssetFailed(name) {
+      window.__LP_BOOT.loaded[name] = false;
+      window.__LP_BOOT.errors.push(name + " konnte nicht geladen werden.");
+    }
+
+    window.setTimeout(function () {
+      var app = document.getElementById("app");
+      if (!app || app.childElementCount > 0 || app.textContent.trim()) return;
+
+      var loaded = window.__LP_BOOT.loaded;
+      var errors = window.__LP_BOOT.errors;
+      var status = [
+        "modules-033.js: " + (loaded.modules ? "geladen" : "fehlt"),
+        "experiment-data-033.js: " + (loaded.data ? "geladen" : "fehlt"),
+        "app-033.js: " + (loaded.app ? "geladen" : "fehlt")
+      ];
+
+      app.innerHTML =
+        '<section class="card boot-error">' +
+          '<h1>Die App konnte nicht vollständig starten</h1>' +
+          '<p>Bitte fotografiere diese Meldung. Damit lässt sich der Fehler direkt erkennen.</p>' +
+          '<pre>' + status.join("\n") +
+          (errors.length ? "\n\n" + errors.join("\n") : "") +
+          '</pre>' +
+        '</section>';
+    }, 2000);
+  </script>
 </head>
 <body>
   <header class="app-header">
@@ -29,14 +70,20 @@
   <main id="app" class="app-shell" tabindex="-1"></main>
 
   <footer class="app-footer">
-    <span>Version 0.3.2</span>
+    <span>Version 0.3.3</span>
     <span>Daten bleiben lokal auf diesem Gerät</span>
   </footer>
 
   <noscript>Für diese App muss JavaScript aktiviert sein.</noscript>
 
-  <script src="./modules.js?v=032"></script>
-  <script src="./experiment-data.js?v=032"></script>
-  <script src="./app.js?v=032"></script>
+  <script src="./modules-033.js?v=033"
+          onload="lpAssetLoaded('modules')"
+          onerror="lpAssetFailed('modules')"></script>
+  <script src="./experiment-data-033.js?v=033"
+          onload="lpAssetLoaded('data')"
+          onerror="lpAssetFailed('data')"></script>
+  <script src="./app-033.js?v=033"
+          onload="lpAssetLoaded('app')"
+          onerror="lpAssetFailed('app')"></script>
 </body>
 </html>
